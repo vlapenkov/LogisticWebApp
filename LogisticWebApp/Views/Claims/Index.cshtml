@@ -1,0 +1,303 @@
+﻿@model ClaimsViewModel
+@using X.PagedList.Mvc;
+@using X.PagedList;
+@using Logistic.Utils;
+
+
+@{
+    ViewData["Title"] = "Журнал заявок";
+}
+
+<h1>@Model.CarrierId</h1>
+
+<form asp-action="Index" method="get" novalidate="novalidate">
+
+
+    <div class="form-inline b-filter-form">
+
+        <div class="form-group">
+            <div class="btn-group mb-15" role="group" data-toggle="buttons">
+
+                <label class="btn b-btn-bordered b-btn-rounded @( Model.FilterByStatus==FilterByStatus.All?"active":"" )"><input hidden type="radio" name="FilterByStatus" id="option1" autocomplete="off" value="0" @( Model.FilterByStatus == FilterByStatus.All ? "checked" : "" )> Все заявки</label>
+
+                <label class="btn b-btn-bordered b-btn-rounded @( Model.FilterByStatus==FilterByStatus.OnlyNew?"active":"" )"><input hidden type="radio" name="FilterByStatus" id="option2" autocomplete="off" value="1" @( Model.FilterByStatus == FilterByStatus.OnlyNew ? "checked" : "" )> Новые</label>
+
+                <label class="btn b-btn-bordered b-btn-rounded @( Model.FilterByStatus==FilterByStatus.OnlyApproved?"active":"" )"><input hidden type="radio" name="FilterByStatus" id="option3" autocomplete="off" value="2" @( Model.FilterByStatus == FilterByStatus.OnlyApproved ? "checked" : "" )> Одобренные</label>
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <input id="byDateFilter" name="byDateFilter" class="form-control b-filter-control mb-15 js-dateRange" placeholder="Фильтр по дате" aria-expanded="true">
+        </div>
+        <div class="form-group">
+            <input asp-for="SearchString" class="form-control b-filter-control mb-15" placeholder="Фильтр по номеру" />
+        </div>
+
+        <div class="form-group">
+            <select asp-for="Volume" class="form-control b-filter-control mb-15" asp-items="Html.GetEnumSelectList<VolumeRanges>()">
+                <option selected="selected" value="">Выберите объем</option>
+
+            </select>
+        </div>
+
+
+        <input type="submit" value="Search" class="btn active b-btn-bordered b-btn-rounded mb-15" />
+    </div>
+    <!-- </div>
+     </div>-->
+    
+
+
+    <div>
+        @Html.Hidden("startDate")
+        @Html.Hidden("endDate")
+    </div>
+
+   
+</form>
+@foreach (var item in Model.Claims)
+{
+    <div class="offer_items_block">
+
+        <div class="offer_items">
+
+            <div class="offer_item">
+                <div class="offer_item_data"> Дата и время заявки</div>
+                <div class="offer_item_data_time"> @Html.DisplayFor(modelItem => item.DocDate)</div>
+            </div>
+
+            <div class="offer_item">
+                <div class="offer_item_data"> Номер</div>
+                <div class="offer_item_data_nomber"> @Html.DisplayFor(modelItem => item.NumberIn1S)</div>
+            </div>
+
+            <div class="offer_item">
+                <div class="offer_item_data"> Маршрут следования</div>
+                <div class="offer_item_data_city_out">@Html.DisplayFor(modelItem => item.Path) </div>
+                <!--<div class="offer_item_data_city_in"> г.Иваново, ул. Советская 65</div>-->
+            </div>
+
+            <div class="offer_item">
+                <div class="offer_item_data">Дата готовности груза</div>
+                <div class="offer_item_data_time_end"> @Html.DisplayFor(modelItem => item.ReadyDate) </div>
+            </div>
+
+            <div class="offer_item">
+                <div class="offer_item_data">Объем, (куб)</div>
+                <div class="offer_item_data_car_kub"> @item.Volume</div>
+            </div>
+
+            <div class="offer_item">
+                <div class="offer_item_data">Дата принятия решения</div>
+                <div class="offer_item_data_end_time"> @item.DeadlineDate</div>
+            </div>
+
+            <div class="offer_item">
+                <div class="offer_item_data">Комментарий</div>
+                <div class="offer_item_data_end_time">@item.Comments</div>
+            </div>
+
+        </div>
+        
+        @if (item.Reply==null)
+        {
+
+            var collapse_id = "collapse-button-" + @item.GuidIn1S.ToString();
+
+        <div class="offer_item_status">
+            
+            <div class="offer_item_data">Статус заявки: <span>@item.Status.GetDisplayName()</span></div>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#@(collapse_id)" aria-expanded="false" aria-controls="collapseExample">  Ответить </button>
+        </div>
+
+        <div class="collapse offer_form_outer" id="@(collapse_id)">
+            <div class="offer_form ">
+
+                <form asp-action="createresponse" class="offer_form_item_  js-sendReply" method="post" novalidate="novalidate">
+                    <input type="hidden" name="GuidOfClaimIn1S" value="@item.GuidIn1S" />
+                    <div class="offer_form_item ">
+                        <div class="form_group_show col-5">
+
+                            <div class="form-group">
+                                <label class=" col-form-label">Время подачи автомобиля </label>
+                                <input asp-for="ArrivalDate" type="text" class="form-control b-input-rounded js-dateOne" required placeholder="Время подачи, от" />
+                            </div>
+                            <span asp-validation-for="ArrivalDate" class="text-danger"></span>
+
+
+                            <div class="form-group">
+                                <label class=" col-form-label">Время выгрузки </label>
+                                <input asp-for="UnloadDate" type="text" class="form-control b-input-rounded js-dateOne" required placeholder="Время выгрузки" />
+
+                            </div>
+                            <span asp-validation-for="UnloadDate" class="text-danger"></span>
+
+
+                        </div>
+
+                        <div class="form_group_show col-5">
+                            <div class="form-group">
+                                <label class=" col-form-label">Стоимость услуги, вкл. НДС </label>
+                                <input asp-for="Cost" type="text" class="form-control b-input-rounded" placeholder="Стоимость услуги, в рублях" />
+                                <i class="fa fa-rub" aria-hidden="true"></i>
+                            </div>
+                            <span asp-validation-for="Cost" class="text-danger"></span>
+                            <!--
+                                <div class="btn-group nds">
+
+                                    <label for="withnds-@collapse_id"> <input type="radio" name="NdsState" id="withnds-@collapse_id" checked value="0"> с НДС </label>
+                                    <label for="nonds-@collapse_id"> <input type="radio" name="NdsState" id="nonds-@collapse_id" value="1"> без НДС</label>
+
+
+                                </div>-->
+
+                            <div class="form-group">
+                                <label class=" col-form-label">Выберите водителя </label>
+                                @Html.DropDownListFor(m => m.DriverId, new SelectList(Model.Drivers, "Id", "Fio"), "Выберите водителя", new { @class = "form-control" })
+
+                            </div>
+                            <span asp-validation-for="DriverId" class="text-danger"></span>
+
+                            <div class="form-group">
+                                <label class=" col-form-label"> Выберите автомобиль</label>
+                                @Html.DropDownListFor(m => m.CarId, new SelectList(Model.Cars, "Id", "StateNumber"), "Выберите авто", new { @class = "form-control" })
+                            </div>
+                            <span asp-validation-for="CarId" class="text-danger"></span>
+
+
+                        </div>
+                    </div>
+                    <div style="text-align:center;">
+                        <button type="submit" class="btn btn-primary">Отправить</button>
+                    </div>
+
+
+                </form>
+
+
+
+            </div>
+        </div>
+        }
+        else
+        {
+
+           
+            @Html.Partial("CreateResponse", item.Reply)
+        }
+    </div>
+
+}
+
+
+@Html.PagedListPager((IPagedList)Model.Claims, page => Url.Action("Index",
+    new
+    {
+        page = page,
+        startDate = Model.StartDate,
+        endDate = Model.EndDate,
+        FilterByStatus = Model.FilterByStatus,
+        Volume = Model.Volume
+    }), PagedListRenderOptions.ClassicPlusFirstAndLast)
+
+
+
+@section scripts {
+    <script>
+        function renderBlock($form, html) {
+
+            var $block = $form.closest(".offer_items_block");
+
+            $block.find(".offer_item_status").remove();
+            $block.find(".offer_form_outer").remove();
+            $block.find(".offer_items").after(html);
+        }
+
+        $(function () {
+            var dateFormat = 'DD.MM.YYYY';
+            moment.locale('ru');
+            $('.js-dateRange').daterangepicker({
+                //autoApply: true,
+                //      startDate: '03.05.2005', endDate: '03.06.2005',
+                autoUpdateInput: false,
+                locale: {
+                    format: dateFormat,
+                    "applyLabel": "Применить",
+                    "cancelLabel": "Отменить",
+                }
+            })
+                .on('cancel.daterangepicker', function (ev, picker) {
+                    $(this).val('');
+                    $('#startDate').val('');
+                    $('#endDate').val('');
+                })
+                .on('apply.daterangepicker', function (ev, picker) {
+                    $('#startDate').val(picker.startDate.format(dateFormat));
+                    $('#endDate').val(picker.endDate.format(dateFormat));
+                    $(this).val(picker.startDate.format(dateFormat) + ' - ' + picker.endDate.format(dateFormat));
+                    console.log('on');
+                });
+
+            if ($('#startDate').val()) {
+                drp = $('.js-dateRange').data('daterangepicker');
+                drp.setStartDate($('#startDate').val());
+                drp.setEndDate($('#endDate').val());
+                $('#byDateFilter').val($('#startDate').val() + ' - ' + $('#endDate').val());
+            }
+
+
+            $('.js-dateOne').daterangepicker({
+
+                showDropdowns: true,
+                timePicker: true,
+                "singleDatePicker": true,
+                "timePicker24Hour": true,
+                locale: {
+                    format: 'DD.MM.YYYY HH:mm',
+                    "applyLabel": "Применить",
+                    "cancelLabel": "Отменить",
+                }
+            });
+
+
+            $('.js-sendReply').submit(function () {
+                var action = $('.js-sendReply').prop('action');
+                var $form = $(this);
+
+                // renderBlock($form, '');
+                //  return false;
+
+                if ($(this).valid()) {
+                    var formData = $(this).serialize();
+                    $.post(
+                        action,
+                        formData
+                    ).done(function (data) {
+
+                        if (typeof data === "object" && data.hasOwnProperty('success') && !data.success) {
+                            var errors = {};
+
+                            showError($form, data.element, data.text);
+                        } else
+
+                            renderBlock($form, data);
+                        //  console.log(data);
+
+                    }).fail(function () {
+                        alert("error");
+                    });
+
+
+                }
+                return false;
+            })
+
+
+
+
+
+
+        }());
+    </script>
+}

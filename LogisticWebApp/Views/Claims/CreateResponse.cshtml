@@ -1,0 +1,42 @@
+﻿@model ReplyToClaim
+
+<div class="offer_item_status">
+    <div class="offer_item_data">Статус заявки: <span>на тендере</span></div>
+</div>
+
+
+<div class="offer_item_info_status">
+
+    <div class="offer_item">
+        <div class="offer_item_data"> Дата подачи автомобиля</div>
+        <div class="offer_item_data_status_day"> @Model.ArrivalDate  </div>
+    </div>
+
+    
+    <div class="offer_item">
+        <div class="offer_item_data">Дата выгрузки</div>
+        <div class="offer_item_data_status_end_day">@Model.UnloadDate  </div>
+    </div>
+        
+
+    <div class="offer_item">
+        <div class="offer_item_data">Стоимость услуги, в рублях </div>
+        <div class="offer_item_data_status_pay">@Model.Cost  </div>
+    </div>
+
+    <div class="offer_item">
+        <div class="offer_item_data">НДС </div>
+        <div class="offer_item_data_status_nds">НДС включен  </div>
+    </div>
+
+    <div class="offer_item">
+        <div class="offer_item_data">Водитель </div>
+        <div class="offer_item_data_status_driver">@Model.Driver?.Fio  </div>
+    </div>
+
+    <div class="offer_item">
+        <div class="offer_item_data">Автомобиль </div>
+        <div class="offer_item_data_status_car">@Model.Car?.Brand @Model.Car?.StateNumber </div>
+    </div>
+
+</div>

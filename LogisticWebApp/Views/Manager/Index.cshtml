@@ -1,0 +1,51 @@
+﻿@model IList<ApplicationUser>
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1> Список пользователей </h1>
+<div class="row b-list-users b-list-users-headers">
+
+
+    <div class="col-md-2 hidden-xs">
+        Email
+    </div>
+    <div class="col-md-2 hidden-xs">
+        Инн
+    </div>
+    <div class="col-md-2 hidden-xs">
+        Кпп
+    </div>
+    <div class="col-md-2 hidden-xs">
+        ФИО
+    </div>
+    <div class="col-md-2 hidden-xs">
+        Клиент
+    </div>
+    </div>
+    @foreach (var user in Model)
+    {
+<a href="@Url.Action("Edit","Manager", new {userId=user.Id })" class="row b-list-users">
+    <div class="col-md-2 b-list-users-item">
+        @user.Email
+    </div>
+
+    <div class="col-md-2 b-list-users-item">
+        @user.Inn
+    </div>
+
+    <div class="col-md-2 b-list-users-item">
+        @user.Kpp
+    </div>
+
+    <div class="col-md-2 b-list-users-item">
+        @user.Fio
+    </div>
+
+    <div class="col-md-2 b-list-users-item">
+        @user.Carrier?.FullName
+    </div>
+</a>
+    }
+
+

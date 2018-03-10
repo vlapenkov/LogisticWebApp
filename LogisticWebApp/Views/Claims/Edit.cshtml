@@ -1,0 +1,68 @@
+﻿@model Logistic.Data.ClaimForTransport
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>ClaimForTransport</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form action="Edit" novalidate="novalidate">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="GuidIn1S" />
+            <div class="form-group">
+                <label asp-for="DocDate" class="control-label"></label>
+                <input asp-for="DocDate" class="form-control" />
+                <span asp-validation-for="DocDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumberIn1S" class="control-label"></label>
+
+                <input type="text" class="form-control js-dateOne" required  name="NumberIn1S">
+                
+            </div>
+            <div class="form-group">
+                <label asp-for="Path" class="control-label"></label>
+                <input asp-for="Path" class="form-control" />
+                <span asp-validation-for="Path" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReadyDate" class="control-label"></label>
+                <input asp-for="ReadyDate" class="form-control" />
+                <span asp-validation-for="ReadyDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeadlineDate" class="control-label"></label>
+                <input asp-for="DeadlineDate" class="form-control" />
+                <span asp-validation-for="DeadlineDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Volume" class="control-label"></label>
+                <input asp-for="Volume" class="form-control" />
+                <span asp-validation-for="Volume" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Comments" class="control-label"></label>
+                <input asp-for="Comments" class="form-control" />
+                <span asp-validation-for="Comments" class="text-danger"></span>
+            </div>
+           
+            <div class="form-group">
+                <label asp-for="CarrierId" class="control-label"></label>
+                <select asp-for="CarrierId" class="form-control" asp-items="ViewBag.CarrierId"></select>
+                <span asp-validation-for="CarrierId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

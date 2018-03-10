@@ -1,0 +1,387 @@
+﻿@model CarsAndDriversViewModel
+@{
+    ViewData["Title"] = "Автопарк";
+}
+
+
+<h1> @ViewData["Title"] @Model.Carrier.Id</h1>
+
+
+<div class="b-filter-group">
+    <div class="btn-group nav nav-tabs">
+        <a class="active show btn  b-btn-bordered b-btn-rounded" data-toggle="tab" href="#cars-items">Автомобили</a>
+        <a class="btn b-btn-bordered b-btn-rounded" data-toggle="tab" href="#drivers-items">Водители</a>
+    </div>
+</div>
+
+
+<div class="tab-content">
+    <div id="cars-items" class="tab-pane fade in active show">
+        @foreach (var car in Model.Cars)
+    {
+        @Html.Partial("_Car",car)
+      }
+
+
+        <div class="regform car_form">
+
+            <form asp-action="AddCar" novalidate="novalidate" method="post" class="js-sendReply" enctype="multipart/form-data" id="addCar-form">
+
+                <div class="form-group">
+                    <label asp-for="Brand" class="col-4 col-form-label">Пример: Газель</label>
+                    <input asp-for="Brand" class="form-control b-input-rounded" placeholder="Марка автомобиля" />
+
+                </div>
+                <span asp-validation-for="Brand" class="text-danger"></span>
+
+                <div class="form-group">
+                    <label asp-for="CarModel" class="col-4 col-form-label">Пример:Бизнес</label>
+                    <input asp-for="CarModel" class="form-control b-input-rounded" placeholder="Модель автомобиля" />
+                </div>
+                <span asp-validation-for="CarModel" class="text-danger"></span>
+
+                <div class="form-group">
+                    <label asp-for="Volume" class="col-4 col-form-label">Пример:16</label>
+                    <input asp-for="Volume" class="form-control b-input-rounded" placeholder="Объем (в куб. метрах)" />
+                </div>
+                <span asp-validation-for="Volume" class="text-danger"></span>
+
+                <div class="form-group">
+                    <label asp-for="StateNumber" class="col-4 col-form-label">Пример: мм 000  оо 777</label>
+                    <input asp-for="StateNumber" class="form-control b-input-rounded" placeholder="Гос номер автомобиля" />
+                </div>
+                <span asp-validation-for="StateNumber" class="text-danger"></span>
+
+                <label class="custom-file">
+                    Скан свидетельства
+                    <input type="file" id="carfile" class="custom-file-input" name="carfile">
+                    <span class="custom-file-control">Файл</span>
+                </label>
+
+
+
+                <button type="submit" class="btn btn-primary b-btn-rounded js-sendReply">Добавить автомобиль </button>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="drivers-items" class="tab-pane fade">
+        @foreach (var driver in Model.Drivers)
+    {
+        @Html.Partial("_Driver", driver)
+      
+}
+
+
+        <div class="regform driver_form">
+
+
+            <form asp-action="AddDriver" novalidate="novalidate" method="post" class="js-sendReply" enctype="multipart/form-data" id="addDriver-form">
+
+                <div class="form-group">
+                    <label asp-for="Fio" class="col-4 col-form-label">Пример: Иванов Иван Иванович</label>
+                    <input asp-for="Fio" class="form-control b-input-rounded" placeholder="ФИО" />
+
+                </div>
+                <span asp-validation-for="Fio" class="text-danger"></span>
+
+
+
+                <div class="form-group">
+                    <label asp-for="PhoneNumber" class="col-4 col-form-label">Пример: 8 999 999 99 99</label>
+                    <input asp-for="PhoneNumber" class="form-control b-input-rounded" placeholder="Номер телефона" maxlength="11" />
+
+                </div>
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+
+
+                <label class="custom-file">
+                    Скан паспорта
+                    <input type="file" id="driverfile" class="custom-file-input" name="driverfile">
+                    <span class="custom-file-control">Файл</span>
+                </label>
+
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input" asp-for="HasContract" />
+                        Есть договор найма
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary b-btn-rounded">Добавить водителя </button>
+            </form>
+        </div>
+
+
+    </div>
+</div>
+
+
+
+
+
+@section scripts {
+<script>
+       
+
+        $(function () {
+
+
+            $('.custom-file-input').on('change', function () {
+
+                var $el = $(this).closest('.custom-file').find('.custom-file-control');
+                $el.text($(this).val());
+            })
+
+
+            //
+            // Удалить машину
+            //
+            $('#cars-items').on('click', '.js-deleteCar', function () {
+
+                var $item = $(this);
+                var url = '@Url.Action("DeleteCar", "CarsAndDrivers")';
+
+                var id = $item.closest('.b-list-cars').data('id');
+                console.log(id);
+
+                $.ajax({
+                    url:url+'?carId='+ id,
+                    type: 'DELETE'
+                }).done(function (data) {
+                    console.log(data);
+
+                    if (data.success) {
+
+                        $item.closest('.b-list-cars').remove();
+
+                    }
+
+                })
+                    .fail(function () {
+                    alert("error");
+                });
+
+                return false;
+            });
+
+
+            //
+            // Удалить водителя
+            //
+            $('#drivers-items').on('click', '.js-deleteDriver', function () {
+
+                var $item = $(this);
+                var url = '@Url.Action("DeleteDriver", "CarsAndDrivers")';
+
+                var id = $item.closest('.b-list-cars').data('id');
+                console.log(id);
+
+                $.ajax({
+                    url:url+'?driverId='+ id,
+                    type: 'DELETE'
+                }).done(function (data) {
+                    console.log(data);
+
+                    if (data.success) {
+
+                        $item.closest('.b-list-cars').remove();
+
+                    }
+
+                })
+                    .fail(function () {
+                    alert("error");
+                });
+
+                return false;
+            });
+
+
+
+            ///
+            // Добавить машину или водителя
+            ///
+
+
+            $('#addCar-form').submit(function () {
+                 
+                var $form = $(this);
+                var action = $form.prop('action');
+                var file = $('[name=carfile]').get(0).files[0];
+                if ($form.valid()) {
+
+                    var formdata = new FormData();
+
+                    var postdata = $form.serializeArray();
+                     $.each(postdata, function (key, input) {
+                         formdata.append(input.name, input.value);
+                     }); 
+
+                    formdata.append('carfile', file);
+
+                    $.ajax({
+                        type: "POST",
+                        url: action,
+                        contentType: false,
+                        processData: false,
+                        data: formdata
+                    }).
+                        done(function (data) {
+
+                            console.log(data);
+
+                            if (typeof data === 'object') {
+                                showError($form, data.element, data.text);
+
+                            } else {
+                                
+                                    var $selector = $('#cars-items .b-list-cars:last');
+                                    if ($selector.length > 0)
+                                        $selector.after(data);
+                                    else $('#cars-items').prepend(data);
+                         
+                            }
+
+
+                        }).fail(function () {
+                            alert("error");
+                        });
+
+                }
+                return false;
+
+            });
+
+
+           
+            $('#addDriver-form').submit(function () {
+
+                var $form = $(this);
+                var action = $form.prop('action');
+                var file = $('[name=driverfile]').get(0).files[0];
+                if ($form.valid()) {
+
+                    var formdata = new FormData();
+
+                    var postdata = $form.serializeArray();
+                    $.each(postdata, function (key, input) {
+                        formdata.append(input.name, input.value);
+                    });
+
+                    formdata.append('driverfile', file);
+
+                    $.ajax({
+                        type: "POST",
+                        url: action,
+                        contentType: false,
+                        processData: false,
+                        data: formdata
+                    }).
+                        done(function (data) {
+
+                            console.log(data);
+
+                            if (typeof data === 'object') {
+                                showError($form, data.element, data.text);
+
+                            } else {
+
+                                var $selector = $('#drivers-items .b-list-cars:last');
+                                if ($selector.length > 0)
+                                    $selector.after(data);
+                                else $('#drivers-items').prepend(data);
+
+                            }
+
+
+                        }).fail(function () {
+                            alert("error");
+                        });
+
+                }
+                return false;
+
+            });
+            
+            /*
+            $('.js-sendReply').submit(function () {
+
+                var file;
+                var $form = $(this);
+                var action = $form.prop('action');
+
+                var isCarAdded = action.toLowerCase().indexOf('addcar') > 0;
+                console.log(isCarAdded);
+
+                if (isCarAdded) file = $('[name=thefile]').get(0).files[0];
+
+                else file = $('[name=driverfile]').get(0).files[0];
+
+
+                //var postData = $('#fields :input').serializeArray();
+                
+
+                if ($form.valid()) {
+                 //   var postdata = $form.serializeArray();
+
+                    var formdata = new FormData();
+
+                   
+                    
+                    formdata.append('thefile', file);
+                    formdata.append('Brand', 'sdfsdf');
+                    
+
+                    console.log(formdata);
+                   
+                    $.ajax({
+                        type: "POST",
+                        url: action,
+                        contentType: false,
+                        processData: false,
+                        data: formdata
+                    }). 
+                        done(function (data) {
+
+                        console.log(data);
+
+                        if (typeof data === 'object') {
+                            showError($form, data.element, data.text);
+
+                        } else {
+                            if (isCarAdded) {
+
+                                var $selector = $('#cars-items .b-list-cars:last');
+                                if ($selector.length > 0)
+                                    $selector.after(data);
+                                else $('#cars-items').prepend(data);
+
+                            }
+                            //$('#cars-items .b-list-cars:last').after(data);
+                            else {
+
+                                var $selector = $('#drivers-items .b-list-cars:last');
+                                if ($selector.length > 0)
+                                    $selector.after(data);
+                                else $('#drivers-items').prepend(data);
+
+                            }
+
+                        }
+
+
+                    }).fail(function () {
+                        alert("error");
+                    });
+
+                    // console.log(data);
+                }
+                return false;
+            }); */
+            
+
+        }());
+</script>
+}

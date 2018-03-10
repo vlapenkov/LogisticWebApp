@@ -1,0 +1,626 @@
+body > .container {
+    padding: 80px 15px 0;
+    color: #2066ad;
+}
+
+.bg-dark {
+    background-color: #407bc0 !important
+}
+
+ul {
+    margin: 0 !important;
+}
+
+
+.btn, input {
+    /*  border-radius: 50px !important; */
+}
+
+.navbar {
+    padding: .8rem 1rem;
+}
+
+.task {
+    background-image: url(../images/task.png);
+    margin-right: 20px;
+    position: relative;
+}
+
+.garage {
+    background-image: url(../images/garage.png);
+    margin-right: 20px;
+}
+
+.profile {
+    background-image: url(../images/profile.png);
+}
+
+.ico-im {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+}
+
+.navbar li {
+    list-style: none;
+}
+
+.menu-right a {
+    align-items: center;
+    display: flex;
+}
+
+.menu-right {
+    display: flex;
+}
+
+    .menu-right > li {
+        list-style: none;
+        padding-right: 20px;
+        border-right: 1px solid white;
+        padding-left: 20px;
+    }
+
+        .menu-right > li > a {
+            color: white;
+        }
+
+.navbar ul {
+    padding: 0;
+}
+
+.menu-right .dropdown-toggle::after {
+    display: none;
+}
+
+.menu-right .nomber {
+    position: absolute;
+    top: 0;
+    right: -8px;
+    border-radius: 50px;
+    color: white;
+    background-color: #49d149;
+    font-size: 13px;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+.dropdown.pull-center li {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.menu-right .dropdown-menu {
+    min-width: auto;
+}
+
+.menu-right > li:last-child {
+    border: none;
+}
+
+.center {
+    text-align: center;
+}
+
+.img-logo img {
+    width: 100%;
+    max-width: 334px;
+    margin-top: 100px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.form-control::placeholder {
+    text-align: center;
+    color: #acc1d4;
+}
+
+.form-control {
+    border: 1px solid #407bc0 !important;
+    padding: .575rem .75rem !important;
+}
+
+.btn-primary {
+    min-width: 180px;
+}
+
+.form {
+    display: flex;
+    align-content: center;
+    justify-content: space-around;
+    align-items: stretch;
+    margin-top: 100px;
+    flex-wrap: wrap;
+}
+
+.form-reg {
+    max-width: 450px;
+    border-right: 1px solid;
+    padding-right: 100px;
+}
+
+    .form-reg p {
+        margin-bottom: 55px;
+    }
+
+.rules {
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.regform {
+    max-width: 700px;
+    margin: 0 auto;
+    margin-top: 0px;
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+    .regform .form-group {
+        display: flex;
+        align-items: center;
+    }
+
+        .regform .form-group label {
+            order: 1;
+            text-align: left;
+            font-style: italic;
+            line-height: 1;
+            font-size: .9rem;
+        }
+
+        .regform .form-group input {
+            max-width: 350px;
+            padding: .575rem .75rem;
+        }
+
+.container .center h1 {
+    margin-top: 50px;
+}
+
+.regform .btn {
+    margin-top: 50px;
+}
+
+.regform .custom-file {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.regform .custom-file-control {
+    padding: 10px 60px;
+    border: 1px solid;
+    border-radius: 50px;
+    margin-left: 10px;
+}
+
+.regform .custom-file-input {
+    max-width: 67px;
+}
+
+.regform p {
+    max-width: 400px;
+    text-align: center;
+    line-height: 1.2;
+    margin: 0 auto;
+    margin-top: 0px;
+    margin-top: 50px;
+    font-size: 14px;
+}
+
+
+.info_select > div, .info_select > input {
+    display: none;
+}
+
+.info_select label {
+    padding: 5px 36px;
+    line-height: 28px;
+    cursor: pointer;
+    position: relative;
+    bottom: 1px;
+    background: white;
+    color: #407bc0;
+    border: 1px solid #407bc0;
+    border-radius: 35px;
+}
+
+.info_select input[type="radio"]:checked + label {
+}
+
+.info_select > input:nth-of-type(1):checked ~ .vkl1,
+.info_select > input:nth-of-type(2):checked ~ .vkl2,
+.info_select > input:nth-of-type(3):checked ~ div:nth-of-type(3) {
+    display: block;
+    margin-top: 50px;
+}
+
+.info_select input[type="radio"]:checked + label[for=vkl1], .info_select input[type="radio"]:checked + label[for=vkl2] {
+    border-radius: 35px;
+    background: #407bc0;
+    color: white;
+    border: 1px solid #407bc0;
+    z-index: 2;
+}
+
+.info_select input[type="radio"]:checked + label[for=vkl1] {
+    margin-right: -35px;
+}
+
+.info_select input[type="radio"]:checked + label[for=vkl2] {
+    margin-left: -35px;
+}
+
+.info_select {
+    margin-top: 50px;
+}
+
+.list_driver, .list_car {
+    display: flex;
+    justify-content: space-between;
+    justify-items: center;
+    flex-wrap: nowrap;
+    border-bottom: 1px solid;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+    .list_driver:first-child, .list_car:first-child {
+        border-top: 1px solid;
+    }
+
+.list_driver_info, .list_car_info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.driver_form label, .car_form label {
+    padding-top: calc(.375rem + 1px);
+    padding-bottom: calc(.375rem + 1px);
+    line-height: 1;
+    cursor: none;
+    position: relative;
+    bottom: 0px;
+    background: transparent;
+    color: auto;
+    border: none;
+    border-radius: none;
+}
+
+    .driver_form label .custom-file-input {
+        max-width: 45px;
+        display: none;
+    }
+
+    .car_form label .custom-file-input {
+        max-width: 5px;
+    }
+
+.driver_form .form-check, .car_form .form-check {
+    display: flex;
+    margin-top: 20px;
+}
+
+    .driver_form .form-check label, .car_form .form-check label {
+        cursor: pointer;
+    }
+
+.modal-header, .modal-footer {
+    border: none;
+}
+
+.modal-body {
+    text-align: center;
+}
+
+.modal-footer {
+    margin: 0 auto;
+}
+
+.modal-open .modal {
+    background-color: rgba(161, 205, 243, 0.5);
+}
+
+.filters_sort a {
+    border: 1px solid #407bc0;
+    text-decoration: none;
+    padding: 5px 25px;
+    color: #407bc0;
+}
+
+    .filters_sort a.selected {
+        background-color: #407bc0;
+        color: white;
+    }
+
+    .filters_sort a:first-child {
+        border-radius: 35px 0 0 35px;
+    }
+
+    .filters_sort a:last-child {
+        border-radius: 0 35px 35px 0;
+    }
+
+.filters_sort {
+    display: flex;
+}
+
+.filters {
+    display: flex;
+    align-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid;
+    margin-bottom: 50px;
+}
+
+.filters_data {
+    justify-content: flex-end;
+    display: flex;
+}
+
+.kub {
+    align-self: center;
+}
+
+.filters_data .dropdown-menu {
+    position: absolute;
+    top: 45px;
+    left: -215px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    background-color: transparent;
+    background-clip: none;
+    border: none;
+    border-radius: none;
+}
+
+
+
+
+
+.kub .form-control {
+    min-width: 200px;
+    border-radius: 35px;
+}
+
+.filters_data .data_time {
+    min-width: 200px;
+}
+
+
+
+.ui-datepicker .selected-start:not(.selected-end) a,
+.ui-datepicker .selected-end:not(.selected-start) a {
+    background: #F3FDD5;
+}
+
+.ui-datepicker .selected.first-of-month:not(.selected-start) a {
+    border-left: 2px dotted #D4E7F6;
+    padding-left: 1px;
+}
+
+.ui-datepicker .selected.last-of-month:not(.selected-end) a {
+    border-right: 2px dotted #D4E7F6;
+    padding-right: 1px;
+}
+
+.offer_items {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-around;
+}
+
+    .offer_items .offer_item_data {
+        font-size: 13px;
+        font-style: italic;
+        color: grey;
+    }
+
+    .offer_items .offer_item {
+        padding: 5px;
+    }
+
+.offer_items_block {
+    border: 1px solid;
+    margin-bottom: 15px;
+}
+
+.offer_item_status {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-top: 10px;
+    border-top: 1px solid lightgrey;
+    padding-bottom: 10px;
+}
+
+.offer_form_item {
+    display: flex;
+    justify-content: space-around;
+}
+
+    .offer_form_item .form-control {
+        border: 1px solid #407bc0 !important;
+        padding: .575rem .75rem;
+        line-height: 1.5;
+        font-size: 1.02rem;
+    }
+
+.form_group_show .form-group {
+    display: flex;
+    align-items: center;
+}
+
+    .form_group_show .form-group .col-form-label {
+        padding: 0;
+        margin-bottom: 0;
+        font-size: inherit;
+        line-height: 1;
+        min-width: 150px;
+    }
+
+.offer_form_item .nds {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px;
+}
+
+.offer_form_item select {
+    border-radius: 35px;
+    margin-bottom: 15px;
+    padding: 0 !important;
+    padding-left: 15px !important;
+}
+
+.offer_form_item_ {
+    margin-bottom: 15px;
+    border-top: 1px solid lightgrey;
+    padding-top: 15px;
+}
+
+.offer_item_info_status {
+    display: flex;
+    align-items: stretch;
+    padding-top: 5px;
+    border-top: 1px solid lightgray;
+    background-color: #eaeaea;
+}
+
+    .offer_item_info_status .offer_item {
+        padding: 5px;
+    }
+
+    .offer_item_info_status .offer_item_data {
+        font-size: 13px;
+        font-style: italic;
+        color: grey;
+        padding-bottom: 5px;
+    }
+
+    .offer_item_info_status > div {
+        font-size: 13px;
+        line-height: 1;
+    }
+
+.pag_nav {
+    display: flex;
+    justify-content: center;
+}
+
+.pag_nav {
+    margin-bottom: 50px;
+}
+
+.dropdown-menu .dropdown-menu-item {
+    padding: 10px 0;
+}
+
+.form-group + .field-validation-error {
+    display: block;
+    margin-top: -1rem;
+}
+
+
+
+@media (max-width: 992px) {
+
+    .form-reg {
+        border: none;
+    }
+}
+
+@media (max-width: 770px) {
+
+    .form-reg, .form_enter {
+        padding-right: 0px;
+        margin-bottom: 100px;
+    }
+
+    .form {
+        flex-wrap: wrap-reverse;
+    }
+
+    .offer_items, .offer_form_item, .offer_item_info_status {
+        display: block;
+    }
+
+    .form_group_show {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .hidden-xs {
+        display: none;
+    }
+
+    .menu-right i {
+        margin-right: 0px;
+    }
+
+    .menu-right > li {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .regform .form-group label {
+        display: none;
+    }
+
+    .car_form .custom-file {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .car_form .custom-file-input {
+        display: none;
+    }
+}
+
+@media (max-width: 402px) {
+    .list_driver_info, .list_car_info {
+        display: block;
+    }
+
+    .offer_item_status, .form_group_show .form-group {
+        display: block;
+    }
+
+    .offer_form_item .form-control {
+        min-height: 44px;
+    }
+
+    .filters_sort a {
+        padding: 5px 10px;
+    }
+
+    .filters_data {
+        flex-wrap: wrap;
+    }
+
+        .filters_data .kub {
+            margin-top: 15px;
+        }
+}
+
+@media (max-width: 991px) {
+    .filters {
+        display: block;
+    }
+
+    .filters_sort {
+        display: flex;
+        margin: 0 auto;
+        max-width: 100%;
+        justify-content: center;
+    }
+
+    .filters_data {
+        justify-content: center;
+        display: flex;
+        margin: 0 auto;
+        max-width: 100%;
+    }
+}

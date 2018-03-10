@@ -1,0 +1,26 @@
+﻿@model Car
+<div data-id="@Model.Id" class="row b-list-cars">
+    <div class="col-md-4 b-list-cars-item">
+        @Model.Brand
+    </div>
+
+    <div class="col-md-4 b-list-cars-item">
+        @Model.StateNumber
+    </div>
+
+    <div class="col-md-3 b-list-cars-item">
+
+        
+        @if (Model.FilePath != null)
+    {
+        <a  target="_blank" class="fancybox-btn" href="@Model.FilePath">
+            <i class="fa fa-image fa-2x"></i>
+            </a>
+            }
+</div>
+
+    <div class="col-md-1 b-list-cars-item">
+        <a href="#" class="js-deleteCar"> <img src="~/images/close.png" alt=" " title=" "></a>
+    </div>
+</div>
+

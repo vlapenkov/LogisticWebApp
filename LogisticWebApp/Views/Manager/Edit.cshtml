@@ -1,0 +1,76 @@
+﻿@model ApplicationUserVm
+
+@{
+    ViewData["Title"] = "Данные пользователя";
+}
+
+<h2>@ViewData["Title"] @* Model.UserName *@</h2>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form action="Edit" novalidate="novalidate" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <label asp-for="Fio" class="control-label"></label>
+                <input asp-for="Fio" class="form-control" />
+                <span asp-validation-for="Fio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Inn" class="control-label"></label>
+                <input asp-for="Inn" maxlength="12" class="form-control" />
+                <span asp-validation-for="Inn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Kpp" class="control-label"></label>
+                <input asp-for="Kpp" class="form-control" />
+                <span asp-validation-for="Kpp" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="CarrierId" class="control-label"></label>
+
+                @*Html.DropDownListFor(m => m.CarrierId, ViewBag.CarrierId as IEnumerable<SelectListItem>, "Выберите перевозчика", new { @class = "form-control" }) *@
+                @Html.DropDownListFor(m => m.CarrierId, new SelectList(Model.Carriers, "Id", "FullName"), "Выберите перевозчика", new { @class = "form-control" })
+                <span asp-validation-for="CarrierId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">В список</a>
+</div>
+
+
+<div class="b-filter-group">
+    <div class="btn-group nav nav-tabs">
+        <a class="active show btn  b-btn-bordered b-btn-rounded" data-toggle="tab" href="#cars-items">Автомобили</a>
+        <a class="btn b-btn-bordered b-btn-rounded" data-toggle="tab" href="#drivers-items">Водители</a>
+    </div>
+</div>
+
+
+<div class="tab-content">
+    <div id="cars-items" class="tab-pane fade in active show">
+        @foreach (var car in Model.Cars)
+        {
+            @Html.Partial("_Car", car)
+        }
+    </div>
+
+    <div id="drivers-items" class="tab-pane fade">
+        @foreach (var driver in Model.Drivers)
+        {
+            @Html.Partial("_Driver", driver)
+
+        }
+    </div>
+    </div>
