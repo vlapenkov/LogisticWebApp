@@ -17,7 +17,7 @@ using LogisticWebApp.Services;
 namespace Logistic.Web.Controllers
 {
     /// <summary>
-    /// 
+    /// Для аутентификации
     /// </summary>
     [Authorize]
     [Route("[controller]/[action]")]
