@@ -20,7 +20,9 @@ using Microsoft.AspNetCore.Localization;
 
 namespace Logistic.Web.Controllers
 {
-
+   /// <summary>
+   /// Класс не тспользуется
+   /// </summary>
     public class HomeController : Controller
     {
 

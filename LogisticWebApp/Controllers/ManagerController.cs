@@ -21,8 +21,8 @@ using Logistic.Web.Services;
 
 namespace Logistic.Web.Controllers
 {
-    [Authorize]
-    [Route("[controller]/[action]")]
+    [Authorize(Roles ="Manager")]
+//    [Route("[controller]/[action]")]
     public class ManagerController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

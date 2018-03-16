@@ -21,7 +21,7 @@ using static ServiceReference1.ServiceCarrierPortTypeClient;
 namespace Logistic.Web.Controllers
 {
     /// <summary>
-    /// Данный класс для того чтобы пользователь мог видеть и отвечать на заявки
+    /// Данный класс для того чтобы пользователь мог видеть и отвечать на заявки 
     /// </summary>
     [Authorize(Policy = "RequireCarrierId")]
     

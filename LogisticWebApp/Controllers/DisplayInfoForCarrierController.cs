@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Logistic.Web.Controllers
 {
+    /// <summary>
+    /// Служебный класс для информирования и оповещений
+    /// </summary>
     [Produces("application/json")]
     [Route("api/DisplayInfoForCarrier")]
     public class DisplayInfoForCarrierController : Controller

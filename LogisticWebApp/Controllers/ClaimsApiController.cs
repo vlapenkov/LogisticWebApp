@@ -14,6 +14,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Logistic.Web.Controllers
 {
+    /// <summary>
+    /// Класс для загрузки и отображения заявок через API
+    /// </summary>
     [Produces("application/xml")]
     [Route("api/Claims")]
     public class ClaimsApiController : Controller

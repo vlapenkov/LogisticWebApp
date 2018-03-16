@@ -16,6 +16,9 @@ using LogisticWebApp.Services;
 
 namespace Logistic.Web.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Authorize]
     [Route("[controller]/[action]")]
     public class AccountController : Controller
