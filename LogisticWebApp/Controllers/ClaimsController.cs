@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Authorization;
 using Logistic.Web.Services;
 using Microsoft.Extensions.Logging;
+using ServiceReference1;
+using static ServiceReference1.ServiceCarrierPortTypeClient;
 
 namespace Logistic.Web.Controllers
 {
@@ -38,17 +40,7 @@ namespace Logistic.Web.Controllers
             _logger = logger;
             _claimService = claimService;
         }
-/*
-        // GET: ClaimForTransports
-        public async Task<IActionResult> Index()
-        {
-            _logger.LogDebug("this is trace messga");
-         
 
-            var applicationDbContext = _context.ClaimsForTransport.Include(c => c.Carrier);
-            return View(await applicationDbContext.ToListAsync());
-        }
-        */
 
         //[ResponseCache(Duration = 100, VaryByQueryKeys = new[] { "page", "searchstring" })]
         public async Task<IActionResult> Index(int? page, string searchstring, FilterByStatus FilterByStatus, VolumeRanges? Volume, [ModelBinder(typeof(DateTimeModelBinder))] DateTime? startDate, [ModelBinder(typeof(DateTimeModelBinder))] DateTime? endDate)
@@ -93,12 +85,8 @@ namespace Logistic.Web.Controllers
 
         private void CheckModel(ModelStateDictionary modelState, ResponseViewModel model)
         {
-            if (model.ArrivalDate >= model.UnloadDate)
-
-            {
-                modelState.AddModelError("UnloadDate", "дата разгрузки не может быть ранее даты подачи авто");
-
-            }
+            if (model.ArrivalDate >= model.UnloadDate)   modelState.AddModelError("UnloadDate", "дата разгрузки не может быть ранее даты подачи авто");
+            
         }
 
         [HttpPost]
@@ -112,11 +100,19 @@ namespace Logistic.Web.Controllers
 
             if (!ModelState.IsValid) return ReturnModelErrorsAsJson();
 
-
-
+            
                 try
                 {
-                    var reply = new ReplyToClaim
+                
+                var proxy = new ServiceCarrierPortTypeClient(EndpointConfiguration.ServiceCarrierSoap);
+
+                Driver driver = await _context.Drivers.FindAsync((int)model.DriverId);
+                Car car = await _context.Cars.FindAsync((int)model.CarId);
+
+                var result = await proxy.CarrierAnswerAsync(_carrierService.Carrier.Id, model.GuidOfClaimIn1S.ToString(), (DateTime)ArrivalDate, (DateTime)UnloadDate, (int) model.Cost, driver.Fio, car.ToString());
+                //return Ok(result.Body.@return);
+
+                var reply = new ReplyToClaim
                     {
                         GuidOfClaimIn1S = model.GuidOfClaimIn1S,
                         CarrierId = _carrierService.Carrier.Id,

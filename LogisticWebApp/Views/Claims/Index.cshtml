@@ -8,7 +8,7 @@
     ViewData["Title"] = "Журнал заявок";
 }
 
-<h1>@Model.CarrierId</h1>
+<h1>@ViewData["Title"] @Model.CarrierId</h1>
 
 <form asp-action="Index" method="get" novalidate="novalidate">
 
@@ -16,33 +16,33 @@
     <div class="form-inline b-filter-form">
 
         <div class="form-group">
-            <div class="btn-group mb-15" role="group" data-toggle="buttons">
+            <div class="btn-group" role="group" data-toggle="buttons">
 
                 <label class="btn b-btn-bordered b-btn-rounded @( Model.FilterByStatus==FilterByStatus.All?"active":"" )"><input hidden type="radio" name="FilterByStatus" id="option1" autocomplete="off" value="0" @( Model.FilterByStatus == FilterByStatus.All ? "checked" : "" )> Все заявки</label>
 
-                <label class="btn b-btn-bordered b-btn-rounded @( Model.FilterByStatus==FilterByStatus.OnlyNew?"active":"" )"><input hidden type="radio" name="FilterByStatus" id="option2" autocomplete="off" value="1" @( Model.FilterByStatus == FilterByStatus.OnlyNew ? "checked" : "" )> Новые</label>
+                <label class="btn b-btn-bordered b-btn-rounded @( Model.FilterByStatus==FilterByStatus.OnlyNew?"active":"" )"><input hidden type="radio" name="FilterByStatus" id="option2" autocomplete="off" value="1" @( Model.FilterByStatus == FilterByStatus.OnlyNew ? "checked" : "" )> на тендере</label>
 
-                <label class="btn b-btn-bordered b-btn-rounded @( Model.FilterByStatus==FilterByStatus.OnlyApproved?"active":"" )"><input hidden type="radio" name="FilterByStatus" id="option3" autocomplete="off" value="2" @( Model.FilterByStatus == FilterByStatus.OnlyApproved ? "checked" : "" )> Одобренные</label>
+                <label class="btn b-btn-bordered b-btn-rounded @( Model.FilterByStatus==FilterByStatus.OnlyApproved?"active":"" )"><input hidden type="radio" name="FilterByStatus" id="option3" autocomplete="off" value="2" @( Model.FilterByStatus == FilterByStatus.OnlyApproved ? "checked" : "" )> одобренные</label>
 
             </div>
         </div>
 
         <div class="form-group">
-            <input id="byDateFilter" name="byDateFilter" class="form-control b-filter-control mb-15 js-dateRange" placeholder="Фильтр по дате" aria-expanded="true">
+            <input id="byDateFilter" name="byDateFilter" class="form-control b-filter-control js-dateRange" placeholder="Фильтр по дате" aria-expanded="true">
         </div>
         <div class="form-group">
-            <input asp-for="SearchString" class="form-control b-filter-control mb-15" placeholder="Фильтр по номеру" />
+            <input asp-for="SearchString" class="form-control b-filter-control" placeholder="Фильтр по номеру" />
         </div>
 
         <div class="form-group">
-            <select asp-for="Volume" class="form-control b-filter-control mb-15" asp-items="Html.GetEnumSelectList<VolumeRanges>()">
+            <select asp-for="Volume" class="form-control b-filter-control" asp-items="Html.GetEnumSelectList<VolumeRanges>()">
                 <option selected="selected" value="">Выберите объем</option>
-
             </select>
         </div>
 
-
-        <input type="submit" value="Search" class="btn active b-btn-bordered b-btn-rounded mb-15" />
+        <div class="form-group">
+            <input type="submit" value="Показать" class="btn active b-btn-bordered b-btn-rounded" />
+        </div>
     </div>
     <!-- </div>
      </div>-->
@@ -60,7 +60,7 @@
 {
     <div class="offer_items_block">
 
-        <div class="offer_items">
+        <div class="offer_items" data-id="@item.GuidIn1S">
 
             <div class="offer_item">
                 <div class="offer_item_data"> Дата и время заявки</div>
@@ -100,7 +100,7 @@
 
         </div>
         
-        @if (item.Reply==null)
+        @if (item.Reply==null  &&  item.Status == StatusOfClaim.OnTender )
         {
 
             var collapse_id = "collapse-button-" + @item.GuidIn1S.ToString();
@@ -195,8 +195,8 @@
     new
     {
         page = page,
-        startDate = Model.StartDate,
-        endDate = Model.EndDate,
+        startDate = Model.StartDate.ValueForPaginator(),
+        endDate = Model.EndDate.ValueForPaginator(),
         FilterByStatus = Model.FilterByStatus,
         Volume = Model.Volume
     }), PagedListRenderOptions.ClassicPlusFirstAndLast)

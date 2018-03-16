@@ -10,17 +10,26 @@ using LogisticWebApp.Data;
 using Logistic.Data;
 using Microsoft.EntityFrameworkCore;
 using Logistic.Web.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Logistic.Web.Controllers
 {
     [Produces("application/xml")]
     [Route("api/Claims")]
     public class ClaimsApiController : Controller
+
     {
+
+        public class ClaimChosenDto {
+            public string carrierId { get; set; }
+            public Guid guidOfClaim { get; set; }
+        }
         private readonly ApplicationDbContext _dbContext;
-        public ClaimsApiController(ApplicationDbContext dbContext)
+        private readonly ILogger<ClaimsApiController> _logger;
+        public ClaimsApiController(ApplicationDbContext dbContext, ILogger<ClaimsApiController> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
 
 
@@ -32,67 +41,89 @@ namespace Logistic.Web.Controllers
         [HttpPost]
         public async Task<int> Post([FromBody]List<ClaimForTransport> data)
         {
- 
-            // новые заявки
-            var claimsNotExist = data.Where(p =>  !_dbContext.ClaimsForTransport.Select(cr => cr.GuidIn1S).Contains(p.GuidIn1S)).ToArray();
 
+            var carrierIds = _dbContext.Carriers.Select(p => p.Id).ToArray();
+            var dataFiltered = data.Where(d => d.CarrierId == null || carrierIds.Contains(d.CarrierId));
 
-            if (claimsNotExist.Length > 0)
+            try
             {
-                await _dbContext.ClaimsForTransport.AddRangeAsync(claimsNotExist);
-                await _dbContext.SaveChangesAsync();
-            }
 
-            
-            // заявки которые есть
-            var dataExisted = data.Where(p => _dbContext.ClaimsForTransport.Select(cr => cr.GuidIn1S).Contains(p.GuidIn1S)).ToArray();
+                var guidsExisted = _dbContext.ClaimsForTransport.Select(p => p.GuidIn1S).ToArray();
+                // заявки которые есть
+                var dataExisted = dataFiltered.Where(p => guidsExisted.Contains(p.GuidIn1S)).ToArray();
 
-            if (dataExisted.Length > 0)
-            {
-                foreach (var claim in dataExisted)
+                if (dataExisted.Length > 0)
                 {
-                    _dbContext.Attach(claim);
-                    _dbContext.Entry(claim).State = EntityState.Modified;
+                    foreach (var claim in dataExisted)
+                    {
+                        _dbContext.Attach(claim);
+                        _dbContext.Entry(claim).State = EntityState.Modified;
+                    }
+                    await _dbContext.SaveChangesAsync();
                 }
-                await _dbContext.SaveChangesAsync();
+
+                //Для заявок которых еще нет заполняем дату создания
+                var claimsNotExist = dataFiltered.Where(p => !guidsExisted.Contains(p.GuidIn1S)).ToArray();
+
+                Array.ForEach(claimsNotExist, newclaim => newclaim.CreatedDate = DateTime.Now);
+
+
+                // новые заявки
+                if (claimsNotExist.Length > 0)
+                {
+                    await _dbContext.ClaimsForTransport.AddRangeAsync(claimsNotExist);
+                    await _dbContext.SaveChangesAsync();
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
             }
 
             return 0;
-        } 
-
-            /*
-            [HttpPost]
-        public IList<ClaimForTransportDto> Post([FromBody]string content)
-        {
-
-            return new[]
-          { new ClaimForTransportDto { DocDate= DateTime.Now,GuidIn1S=Guid.NewGuid(),NumberIn1S="123",Path="",Volume=10},
-            new ClaimForTransportDto { DocDate = DateTime.Now, GuidIn1S = Guid.NewGuid(), NumberIn1S = "123", Path = "",ReadyDate=DateTime.Now }
-          };
         }
-        */
+
+
 
         // GET: api/Test
         [HttpGet]
-      //  [Route("claims")]
-        public IQueryable<ClaimForTransport> Get() => _dbContext.ClaimsForTransport;
-/*
-        [HttpGet]
-        [Route("files")]
-        public IQueryable<FileModel> GetFiles() => _dbContext.Files;
+        //  [Route("claims")]
+        public IQueryable<ClaimForTransport> Get() => _dbContext.ClaimsForTransport.Include(p => p.Replies);
 
-
-        [HttpGet]
-        [Route("claimsdto")]
-        public IList<ClaimForTransportDto> GetClaims()
+        /// <summary>
+        /// Функция подтверждает выбор перевозчика для заявки 
+        /// </summary>
+        /// <param name="claimdto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("choosecarrier")]
+        public IActionResult ChooseCarrier([FromBody]ClaimChosenDto claimdto)
         {
-            return new []
-          { new ClaimForTransportDto { DocDate= DateTime.Now,GuidIn1S=Guid.NewGuid(),NumberIn1S="123",Path="",Volume=10},
-            new ClaimForTransportDto { DocDate = DateTime.Now, GuidIn1S = Guid.NewGuid(), NumberIn1S = "123", Path = "",ReadyDate=DateTime.Now }
-          };
+            
+            var claim = _dbContext.ClaimsForTransport.FirstOrDefault(p => p.GuidIn1S == claimdto.guidOfClaim);
 
+            if (claim == null)
+            {
+                _logger.LogError("claim not found" + claimdto.guidOfClaim.ToString());
+                throw new NullReferenceException("claim not found" + claimdto.guidOfClaim.ToString());
+
+            }
+
+            try
+            {
+                claim.CarrierId = claimdto.carrierId;
+                claim.Status = StatusOfClaim.Chosen;
+                _dbContext.SaveChanges();
+                _logger.LogDebug($" Claim carrier chosen: {claim.GuidIn1S} {claim.NumberIn1S}");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
+            return Ok(claimdto.guidOfClaim);
 
         }
-        */
     }
 }

@@ -27,7 +27,7 @@ namespace Logistic.Web.Filters
                                                        CarrierIdRequirement requirement)
         {
             var user =  _userManager.GetUserAsync(context.User).Result;
-            if (user.CarrierId!=null) context.Succeed(requirement);
+            if (user?.CarrierId!=null) context.Succeed(requirement);
 
             return Task.CompletedTask;
         }

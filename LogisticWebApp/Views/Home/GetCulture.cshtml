@@ -1,0 +1,21 @@
+﻿@using Microsoft.AspNetCore.Http.Features
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+
+@model RequestCulture
+@{
+    ViewData["Title"] = "GetCulture";
+}
+
+<h2>@Model.UICulture</h2>
+
+@{ var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+
+}
+
+@requestCulture.RequestCulture.UICulture
+
+<h3>@Localizer["String1"]</h3>
+

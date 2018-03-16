@@ -11,9 +11,10 @@ namespace Logistic.Web.Models
     {
 
         
-        public ApplicationUserVm(string id,string fio, string inn, string kpp, string carrierId)
+        public ApplicationUserVm(string id, string username, string fio, string inn, string kpp, string carrierId)
         {
             Id = id;
+            Username = username;
             Fio = fio;
             Inn = inn;
             Kpp = kpp;
@@ -31,6 +32,9 @@ namespace Logistic.Web.Models
                
         public string Id { get; set; }
 
+        public string Username { get; private set; }
+
+
         [Display(Name = "ФИО")]
         
         [RegularExpression(@"([А-ЯЁ][а-яё]+[\-\s]?){3,}", ErrorMessage = "Введите ФИО с большой буквы ")]
@@ -41,7 +45,11 @@ namespace Logistic.Web.Models
         [Display(Name = "ИНН")]
         [RegularExpression("([1-9][0-9]{11}$)", ErrorMessage = "ИНН должно быть 12 цифр")]
         public string Inn { get; set; }
+
+        [Display(Name = "КПП")]
         public string Kpp { get; set; }
+
+        [Display(Name = "Перевозчик")]
         public string CarrierId { set; get; }
 
 

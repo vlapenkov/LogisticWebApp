@@ -18,7 +18,9 @@ namespace Logistic.Data
     [DataContract(Namespace = "")]
     public class ClaimForTransport
     {
-    
+
+      
+
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         [DataMember]
         public Guid GuidIn1S { get; set; }
@@ -59,7 +61,7 @@ namespace Logistic.Data
         [DataMember]
         public StatusOfClaim Status { get; set; }
 
-       
+        [DataMember]
         public virtual List<ReplyToClaim> Replies { get; set; }
 
         [MaxLength(7)]
@@ -70,6 +72,10 @@ namespace Logistic.Data
         
         public virtual Carrier Carrier { get; set; }
 
+        [DataMember(EmitDefaultValue = false)]
+        
+        public DateTime CreatedDate { get;  set; }
+
     }
 
     /// <summary>
@@ -78,17 +84,19 @@ namespace Logistic.Data
     [DataContract(Name = "Status")]
     public enum StatusOfClaim
     {
+        // 0 - не используем
         [Display(Name = "в поиске")]
         
         // нужен для десеарилизации заявок (статус передается как число)
         [EnumMember(Value ="0")]
         InSearch =0,
 
+        
         [Display(Name = "на тендере")] //1
         [EnumMember(Value = "1")]
         OnTender =1 ,
 
-        [Display(Name = "есть ответ")] //2
+        [Display(Name = "есть ответ")] //2 - не используем
         [EnumMember(Value = "2")]
         Responded =2 ,
 

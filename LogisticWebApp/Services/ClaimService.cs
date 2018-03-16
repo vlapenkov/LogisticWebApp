@@ -37,11 +37,11 @@ namespace Logistic.Web.Services
                 Where(p => model.StartDate == null || p.DocDate >= model.StartDate).
                 Where(p => model.EndDate == null || p.DocDate <= model.EndDate);
 
-            
-
-            claims = claims.Where(p => p.Status == StatusOfClaim.OnTender || p.CarrierId == model.CarrierId);
-
             if (model.Volume != null) claims = claims.Where(p => p.Volume <= (int)model.Volume.Value);
+
+            claims = claims.Where(p => p.Status == StatusOfClaim.OnTender || p.CarrierId == model.CarrierId).OrderByDescending(p=>p.DocDate);
+
+           
 
 
             var claimsResult = (await claims.AsNoTracking().ToListAsync()).Select(p => new ClaimWithOneReplyVm
@@ -77,6 +77,35 @@ namespace Logistic.Web.Services
             }
 
             return   claimsResult.ToList();
+        }
+
+        /// <summary>
+        /// Получить число заявок без ответов
+        /// </summary>
+        /// <param name="carrierId"></param>
+        /// <returns></returns>
+        public async Task<int> GetNumberOfActiveClaimsWithNoReplies(string carrierId)
+        {
+
+            IQueryable<ClaimForTransport> claims = _context.ClaimsForTransport.Include(reply => reply.Replies);
+                
+                
+            claims = claims.Where(p => p.Status == StatusOfClaim.OnTender).OrderByDescending(p => p.DocDate);
+
+            
+            return (await claims.AsNoTracking().ToListAsync()).Select(p => new ClaimWithOneReplyVm
+            {
+                GuidIn1S = p.GuidIn1S,            
+                CarrierId = p.CarrierId,
+                Reply = p.Replies.FirstOrDefault(x => x.CarrierId == carrierId)
+            }).Where(p => p.Reply == null).Count();
+                        
+        }
+
+        public async Task<Guid> GetLastActiveClaim()
+        {
+           return await _context.ClaimsForTransport.Where(p => p.Status == StatusOfClaim.OnTender).OrderByDescending(p => p.DocDate).Select(claim => claim.GuidIn1S).FirstOrDefaultAsync();
+            
         }
     }
 }

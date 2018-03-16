@@ -12,10 +12,6 @@ ul {
 }
 
 
-.btn, input {
-    /*  border-radius: 50px !important; */
-}
-
 .navbar {
     padding: .8rem 1rem;
 }
@@ -73,7 +69,7 @@ ul {
     display: none;
 }
 
-.menu-right .nomber {
+.menu-right .number-badge {
     position: absolute;
     top: 0;
     right: -8px;
@@ -89,10 +85,11 @@ ul {
     padding-left: 10px;
     padding-right: 10px;
 }
-
+/*
 .menu-right .dropdown-menu {
     min-width: auto;
 }
+    */
 
 .menu-right > li:last-child {
     border: none;
@@ -117,7 +114,7 @@ ul {
 
 .form-control {
     border: 1px solid #407bc0 !important;
-    padding: .575rem .75rem !important;
+  /*  padding: .575rem .75rem !important;  */
 }
 
 .btn-primary {
@@ -226,8 +223,10 @@ ul {
     border-radius: 35px;
 }
 
+/*
 .info_select input[type="radio"]:checked + label {
 }
+    */
 
 .info_select > input:nth-of-type(1):checked ~ .vkl1,
 .info_select > input:nth-of-type(2):checked ~ .vkl2,

@@ -9,8 +9,8 @@
 
 <div class="b-filter-group">
     <div class="btn-group nav nav-tabs">
-        <a class="active show btn  b-btn-bordered b-btn-rounded" data-toggle="tab" href="#cars-items">Автомобили</a>
-        <a class="btn b-btn-bordered b-btn-rounded" data-toggle="tab" href="#drivers-items">Водители</a>
+        <a class="active show btn  b-btn-bordered b-btn-rounded" data-toggle="tab" href="#cars-items">Автомобили <span class="badge badge-pill badge-blue" id="numberOf-cars">@Model.Cars.Count</span></a>
+        <a class="btn b-btn-bordered b-btn-rounded" data-toggle="tab" href="#drivers-items">Водители <span class="badge badge-pill badge-blue" id="numberOf-drivers">@Model.Drivers.Count</span></a>
     </div>
 </div>
 
@@ -123,7 +123,11 @@
 
 @section scripts {
 <script>
-       
+
+    function updateNumbers() { 
+        $('#numberOf-cars').text($('#cars-items .b-list-cars').length);
+        $('#numberOf-drivers').text($('#drivers-items .b-list-cars').length);
+    }
 
         $(function () {
 
@@ -155,6 +159,7 @@
                     if (data.success) {
 
                         $item.closest('.b-list-cars').remove();
+                        updateNumbers();
 
                     }
 
@@ -187,6 +192,7 @@
                     if (data.success) {
 
                         $item.closest('.b-list-cars').remove();
+                        updateNumbers();
 
                     }
 
@@ -230,7 +236,7 @@
                     }).
                         done(function (data) {
 
-                            console.log(data);
+                         //   console.log(data);
 
                             if (typeof data === 'object') {
                                 showError($form, data.element, data.text);
@@ -240,7 +246,11 @@
                                     var $selector = $('#cars-items .b-list-cars:last');
                                     if ($selector.length > 0)
                                         $selector.after(data);
-                                    else $('#cars-items').prepend(data);
+                                    else {
+                                        $('#cars-items').prepend(data);
+                                       
+                                    }
+                                    updateNumbers();
                          
                             }
 
@@ -281,7 +291,7 @@
                     }).
                         done(function (data) {
 
-                            console.log(data);
+                         //   console.log(data);
 
                             if (typeof data === 'object') {
                                 showError($form, data.element, data.text);
@@ -291,7 +301,11 @@
                                 var $selector = $('#drivers-items .b-list-cars:last');
                                 if ($selector.length > 0)
                                     $selector.after(data);
-                                else $('#drivers-items').prepend(data);
+                                else {
+                                    $('#drivers-items').prepend(data);
+                                   
+                                }
+                                updateNumbers();
 
                             }
 
@@ -305,81 +319,7 @@
 
             });
             
-            /*
-            $('.js-sendReply').submit(function () {
-
-                var file;
-                var $form = $(this);
-                var action = $form.prop('action');
-
-                var isCarAdded = action.toLowerCase().indexOf('addcar') > 0;
-                console.log(isCarAdded);
-
-                if (isCarAdded) file = $('[name=thefile]').get(0).files[0];
-
-                else file = $('[name=driverfile]').get(0).files[0];
-
-
-                //var postData = $('#fields :input').serializeArray();
-                
-
-                if ($form.valid()) {
-                 //   var postdata = $form.serializeArray();
-
-                    var formdata = new FormData();
-
-                   
-                    
-                    formdata.append('thefile', file);
-                    formdata.append('Brand', 'sdfsdf');
-                    
-
-                    console.log(formdata);
-                   
-                    $.ajax({
-                        type: "POST",
-                        url: action,
-                        contentType: false,
-                        processData: false,
-                        data: formdata
-                    }). 
-                        done(function (data) {
-
-                        console.log(data);
-
-                        if (typeof data === 'object') {
-                            showError($form, data.element, data.text);
-
-                        } else {
-                            if (isCarAdded) {
-
-                                var $selector = $('#cars-items .b-list-cars:last');
-                                if ($selector.length > 0)
-                                    $selector.after(data);
-                                else $('#cars-items').prepend(data);
-
-                            }
-                            //$('#cars-items .b-list-cars:last').after(data);
-                            else {
-
-                                var $selector = $('#drivers-items .b-list-cars:last');
-                                if ($selector.length > 0)
-                                    $selector.after(data);
-                                else $('#drivers-items').prepend(data);
-
-                            }
-
-                        }
-
-
-                    }).fail(function () {
-                        alert("error");
-                    });
-
-                    // console.log(data);
-                }
-                return false;
-            }); */
+           
             
 
         }());

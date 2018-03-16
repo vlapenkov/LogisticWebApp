@@ -103,7 +103,18 @@ h1 {
 
 .b-filter-form {
     justify-content:space-between;
-    margin-bottom:50px;
+    margin-bottom:30px;
+    margin-top:50px;
+}
+
+.badge-blue {
+    color: rgb(255, 255, 255);
+    background-color: rgb(64, 123, 192);
+}
+
+.btn-group .active.show .badge-blue {
+    color: rgb(64, 123, 192);
+    background-color: white;
 }
 
 @media (max-width: 768px) {
@@ -111,6 +122,26 @@ h1 {
         text-align: center;
     }
 }
+
+.form-inline.b-form-mb-10 .form-group {
+    margin-bottom:10px;
+}
+
+.form-inline.b-form-mb-10 .form-group label::after {
+    margin-left:15px;
+}
+
+.b-form-user-edit .form-group label {
+    margin-right:20px;
+}
+
+.form-inline.b-filter-form .form-group {
+    margin-bottom:10px;
+}
+.js-dateRange {
+    min-width:200px;
+}
+
     /*
     .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
         color: rgb(255, 255, 255);

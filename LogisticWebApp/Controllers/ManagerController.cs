@@ -76,15 +76,17 @@ namespace Logistic.Web.Controllers
 
             var carrierId = user.CarrierId;
 
-            model = new ApplicationUserVm(userId,user.Fio, user.Inn, user.Kpp, user.CarrierId);
+            model = new ApplicationUserVm(userId, user.UserName, user.Fio, user.Inn, user.Kpp, user.CarrierId);
+
+         //  var user= _dbContext.Users.FirstOrDefault(u => u.Id == userId);
 
             model.Carriers = await _dbContext.Carriers.OrderBy(c => c.FullName).ToListAsync();
 
             if (carrierId != null)
-
-            model.Cars = await _carrierService.GetCars(carrierId);
-            model.Drivers = await _carrierService.GetDrivers(carrierId);
-            
+            {
+                model.Cars = await _carrierService.GetCars(carrierId);
+                model.Drivers = await _carrierService.GetDrivers(carrierId);
+            }
             
             return model;
         }

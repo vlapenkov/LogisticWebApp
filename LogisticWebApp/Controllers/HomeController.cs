@@ -16,9 +16,11 @@ using Logistic.Web.Services;
 using ServiceReference1;
 using static ServiceReference1.ServiceCarrierPortTypeClient;
 using System.Net;
+using Microsoft.AspNetCore.Localization;
 
 namespace Logistic.Web.Controllers
 {
+
     public class HomeController : Controller
     {
 
@@ -41,20 +43,25 @@ namespace Logistic.Web.Controllers
             _carrierService = carrierService;
 
         }
-        
-                
+
+        public IActionResult GetCulture()
+        {
+
+           var culture= Request.HttpContext.Features.Get<IRequestCultureFeature>().RequestCulture;
+            
+            return View(culture);
+        }
+
+        public IActionResult Messaging()
+        {
+            return View();
+        }
+
 
         public async Task<IActionResult> Index()
         {
-            /*
-            ServiceCarrierPortTypeClient proxy = new ServiceCarrierPortTypeClient (EndpointConfiguration.ServiceCarrierSoap);
-            proxy.ClientCredentials.Windows.AllowedImpersonationLevel =
-         System.Security.Principal.TokenImpersonationLevel.Impersonation;
-            proxy.ClientCredentials.UserName.UserName = "ClientRazumov";
-            proxy.ClientCredentials.UserName.Password = "js4nHnY8";
-            await proxy.CarrierAnswerAsync("00094", Guid.NewGuid().ToString(), DateTime.Now, DateTime.Now, 10, "asdf", "sdfsdf"); */
-         //   proxy.ClientCredentials = new NetworkCredential("ClientRazumov", "js4nHnY8");
-
+           
+        
 
 
             ViewBag.CarrierId = _carrierService.Carrier?.Inn;
@@ -70,13 +77,14 @@ namespace Logistic.Web.Controllers
             return View();
         }
 
-
+        [Authorize(Roles ="Administrator")]
         [HttpGet]
         public async Task<IActionResult> AddFile()
         {
             return View();
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
        public async Task<IActionResult> AddFile(IFormFileCollection uploads)
         {
@@ -99,8 +107,13 @@ namespace Logistic.Web.Controllers
             return RedirectToAction("AddFile");
         }
 
+        
+        public string Env()
+        {
+           return  _appEnvironment.EnvironmentName;
+        }
 
-        [Authorize(Roles ="Manager")] 
+        // [Authorize(Roles ="Manager")] 
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";

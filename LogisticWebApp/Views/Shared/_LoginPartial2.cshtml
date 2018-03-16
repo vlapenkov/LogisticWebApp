@@ -1,36 +1,42 @@
 @using Microsoft.AspNetCore.Identity
 @using Logistic.Web.Models
+@using Microsoft.AspNetCore.Http.Features
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject IViewLocalizer Localizer
+
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@{ var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+
+}
+
 
 @if (SignInManager.IsSignedIn(User))
 {
+    <ul class="menu-right">
+        <li><a href="@Url.Action("Index", "Claims")" class="offer"><i class="ico-im task"> <i class="number-badge" id="numberof-activeclaims"></i></i><span class="hidden-xs"> @Localizer["ListOfClaims"]</span></a></li>
+        <li><a href="@Url.Action("Index", "CarsAndDrivers")"><i class="ico-im garage"> </i><span class="hidden-xs"> @Localizer["Autopark"]  </span></a></li>
+        <li class="dropdown pull-center">
+            <a href="#" data-toggle="dropdown" class="dropdown-toggle"> @UserManager.GetUserName(User)<i class="ico-im profile"></i> </a>
+            <ul class="dropdown-menu">
+                <li class="dropdown-menu-item"><a href="#">@Localizer["Settings"]</a></li>
 
+                <li class="dropdown-menu-item"><a href="javascript:document.getElementById('logoutForm').submit()">@Localizer["Exit"]</a></li>
 
-<ul class="menu-right">
-    <li><a href="@Url.Action("List","Claims")" class="offer"><i class="ico-im task"> <div class="nomber">1</div></i><span class="hidden-xs"> Ваши заявки </span></a></li>
-    <li><a href="#"><i class="ico-im garage"> </i><span class="hidden-xs"> Автопарк  </span></a></li>
-    <li class="dropdown pull-center">
-        <a href="#" data-toggle="dropdown" class="dropdown-toggle"> <i class="ico-im profile"></i> </a>
-        <ul class="dropdown-menu">
-            <li class="dropdown-menu-item"><a href="#">Настройки</a></li>
-
-            
-                <li class="dropdown-menu-item"> 
-                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
-                        <a href="#">Выход</a>
-                    </form>
-</li>
-                
-        </ul>
-    </li>
-</ul>
+            </ul>
+        </li>
+    </ul>
+    <form hidden asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm"></form>
 }
 else
 {
-<ul class="nav navbar-nav navbar-right">
-    <li><a asp-area="" asp-controller="Account" asp-action="Register">Register</a></li>
-    <li><a asp-area="" asp-controller="Account" asp-action="Login">Log in</a></li>
-</ul>
+    <ul class="menu-right">
+        <li><a asp-area="" asp-controller="Account" asp-action="Register">@Localizer["Register"]</a></li>
+        <li><a asp-area="" asp-controller="Account" asp-action="Login">@Localizer["Login"]</a></li>
+    </ul>
+
 }

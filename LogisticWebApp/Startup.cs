@@ -22,14 +22,34 @@ using Microsoft.AspNetCore.Authorization;
 using Logistic.Web.Filters;
 using Logistic.Web.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Mvc.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 
 namespace LogisticWebApp
 {
     public class Startup
     {
+        /*
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+        }*/
+        public Startup(IHostingEnvironment env)
+        {
+
+            var builder = new ConfigurationBuilder()
+            .SetBasePath(env.ContentRootPath)
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+
+
+         
+
+            builder.AddEnvironmentVariables();
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -57,15 +77,25 @@ namespace LogisticWebApp
             {              
                 options.AccessDeniedPath = "/Account/Login";              
             });
-            
 
-            // Add application services.
-            services.AddTransient<IEmailSender, EmailSender>();
 
-          /*  var policy = new AuthorizationPolicyBuilder()
-        .RequireAuthenticatedUser().RequireAssertion(context=>context.User.Identity.)
-        .RequireRole("Admin", "SuperUser")
-        .Build(); */
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[]
+                {
+                 
+                    new CultureInfo("ru")
+                };
+
+                options.DefaultRequestCulture = new RequestCulture("ru");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
+
+            /*  var policy = new AuthorizationPolicyBuilder()
+          .RequireAuthenticatedUser().RequireAssertion(context=>context.User.Identity.)
+          .RequireRole("Admin", "SuperUser")
+          .Build(); */
 
             //   services.AddMvc().
             // для того чтобы работал model binding для web api (из 1С передается xml)
@@ -82,12 +112,15 @@ namespace LogisticWebApp
             
     */
 
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             services.AddMvc(options =>
             {
+                options.Filters.Add(new RequireHttpsAttribute());
                 options.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
                 options.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
-            }).AddXmlSerializerFormatters();
+            }).AddXmlSerializerFormatters()
+            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
 
             /*    services.AddAuthorization(options =>
                 {
@@ -99,10 +132,15 @@ namespace LogisticWebApp
                 options.AddPolicy("RequireCarrierId", policy => policy.Requirements.Add(new CarrierIdRequirement()));
             });
 
+            
+
             services.AddScoped<IAuthorizationHandler, CarrierIdHandler>();
             services.AddScoped<CarrierService>();
             services.AddScoped<ClaimService>();
             services.AddScoped<FileUploadService>();
+
+            // Add application services.
+            services.AddTransient<IEmailSender, EmailSender>();
 
         }
 
@@ -119,6 +157,16 @@ namespace LogisticWebApp
 
             loggerFactory.AddProvider(new DbLoggerProvider((_, b) => b == LogLevel.Debug || b == LogLevel.Error, Configuration.GetConnectionString("DefaultConnection")));
             //loggerFactory.AddContext((_,b)=>b==LogLevel.Debug||b==LogLevel.Error );
+
+
+            // редирект на Https
+            var options = new RewriteOptions().AddRedirectToHttps();
+
+            app.UseRewriter(options);
+
+            // локазизация (partial views не работали)
+            var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(locOptions.Value);
 
             if (env.IsDevelopment())
             {
@@ -143,7 +191,7 @@ namespace LogisticWebApp
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Claims}/{action=Index}/{id?}");
             });
         }
     }

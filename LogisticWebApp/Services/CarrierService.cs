@@ -42,7 +42,7 @@ namespace Logistic.Web.Services
 
         public async Task<IList<Car>> GetCars(string carrierId) =>  await _dbContext.Cars.Where(p => p.CarrierId == carrierId).ToListAsync();
 
-        public async Task<IList<Driver>> GetDrivers(string carrierId) => await  _dbContext.Drivers.Where(p => p.CarrierId == carrierId).ToListAsync();
+        public async Task<IList<Driver>> GetDrivers(string carrierId) => await  _dbContext.Drivers.Where(p => p.CarrierId == carrierId).ToListAsync() ;
 
 
         public async Task<ApplicationUser> GetUserById(string userId)

@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Logistic.Web.Controllers
 {
     /// <summary>
-    /// Данный класс служит для импорта и отображения заявок
+    /// Данный класс служит для импорта и отображения перевозчиков
     /// </summary>
     [Produces("application/xml")]
     [Route("api/Carriers")]

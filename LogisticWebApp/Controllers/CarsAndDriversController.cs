@@ -25,10 +25,13 @@ namespace Logistic.Web.Controllers
         private readonly ILogger<CarsAndDriversController> _logger;
         private readonly FileUploadService _fileUploadService;
 
-        public CarsAndDriversController(CarrierService carrierService, ApplicationDbContext dbContext, ILogger<CarsAndDriversController> logger, FileUploadService fileUploadService)
+        public CarsAndDriversController(CarrierService carrierService, 
+            ApplicationDbContext dbContext,
+            ILogger<CarsAndDriversController> logger, 
+            FileUploadService fileUploadService)
         {
-            this._carrierService = carrierService;
-            this._dbContext = dbContext;
+            _carrierService = carrierService;
+            _dbContext = dbContext;
             _logger = logger;
             _fileUploadService = fileUploadService;
 

@@ -1,0 +1,9 @@
+﻿{
+  "short_name": "LogisticApp",
+  "name": "Веб приложение для тендоров по логистике",
+  "gcm_sender_id": "103953800507",
+  "permissions": [
+    "background"
+  ]
+
+}

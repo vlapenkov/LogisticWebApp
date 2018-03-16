@@ -51,5 +51,10 @@ namespace Logistic.Data
         [MaxLength(Byte.MaxValue)]
         public string FilePath { get; set; }
 
+        public override string ToString()
+        {
+            return $"{Brand} {Model} {StateNumber}";
+        }
+
     }
 }
