@@ -12,16 +12,23 @@
         <div class="offer_item_data_status_day"> @Model?.ArrivalDate  </div>
     </div>
 
-    
+
     <div class="offer_item">
         <div class="offer_item_data">Дата выгрузки</div>
         <div class="offer_item_data_status_end_day">@Model?.UnloadDate  </div>
     </div>
-        
+
 
     <div class="offer_item">
-        <div class="offer_item_data">Стоимость услуги, в рублях </div>
-        <div class="offer_item_data_status_pay">@Model?.Cost  </div>
+        <div class="offer_item_data">Стоимость услуги </div>
+        <div class="offer_item_data_status_pay">
+
+            @Model?.Cost
+            @if (Model != null && Model.Cost > 0)
+            {
+                <i class="fa fa-rub" aria-hidden="true"></i>
+            }
+        </div>
     </div>
 
     <div class="offer_item">
