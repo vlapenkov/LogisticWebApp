@@ -8,6 +8,7 @@ namespace LogisticWebApp.Models.AccountViewModels
 {
     public class LoginViewModel
     {
+        [Display(Name = "Email (логин)")]
         [Required]
         [EmailAddress]
         

@@ -40,11 +40,14 @@ namespace Logistic.Web.Data
         public static   void SeedUsers( UserManager<ApplicationUser> userManager )
         {
 
-          string  password = "facility", email = "vovan@yst.ru";
+          string  password = "facility", email = "admin@yst.ru";
 
             if (userManager.FindByNameAsync(email).Result==null) {
                 var user = new ApplicationUser { UserName = email, Email = email };
                  userManager.CreateAsync(user, password).Wait();
+
+                userManager.AddToRoleAsync(user, "Administrator").Wait();
+                userManager.AddToRoleAsync(user, "Manager").Wait();
             }
            
            

@@ -11,6 +11,7 @@ using Logistic.Data;
 using Microsoft.EntityFrameworkCore;
 using Logistic.Web.Models;
 using Microsoft.Extensions.Logging;
+using Logistic.Web.Services;
 
 namespace Logistic.Web.Controllers
 {
@@ -29,14 +30,19 @@ namespace Logistic.Web.Controllers
         }
         private readonly ApplicationDbContext _dbContext;
         private readonly ILogger<ClaimsApiController> _logger;
-        public ClaimsApiController(ApplicationDbContext dbContext, ILogger<ClaimsApiController> logger)
+        private readonly FcmService  _fcmservice;
+
+       
+
+        public ClaimsApiController(ApplicationDbContext dbContext, ILogger<ClaimsApiController> logger, FcmService fcmservice)
         {
             _dbContext = dbContext;
             _logger = logger;
+            _fcmservice = fcmservice;
         }
 
 
-        // POST: https://localhost:44325/api/CarrierImport   
+        // POST: https://localhost:44325/api/claims
         //Content-Length: 13102
         //Content-Type: application/xml
         //<ArrayOfClaimForTransport><ClaimForTransport><CarrierId>94531</CarrierId><Comments>комментарий</Comments><DeadlineDate>2018-11-12T00:00:00</DeadlineDate><DocDate>2018-02-12T00:00:00</DocDate><GuidIn1S>40a0f701-3705-11e7-8505-d4ae52b5e909</GuidIn1S><NumberIn1S>А123456</NumberIn1S><Path>Ярославль - Москва - Васюки</Path><Volume>10</Volume></ClaimForTransport><ClaimForTransport><DocDate>2018-02-02T00:00:00</DocDate><GuidIn1S>cb61ca1f-3705-11e7-8505-d4ae52b5e909</GuidIn1S><NumberIn1S>Ф23443</NumberIn1S><Path>Спб- Витебск - Воронеж</Path><Volume>110</Volume></ClaimForTransport></ArrayOfClaimForTransport>
@@ -59,8 +65,14 @@ namespace Logistic.Web.Controllers
                 {
                     foreach (var claim in dataExisted)
                     {
-                        _dbContext.Attach(claim);
-                        _dbContext.Entry(claim).State = EntityState.Modified;
+                        //_dbContext.Attach(claim);
+                        //  _dbContext.Entry(claim).State = EntityState.Modified;
+
+                       var claimFound=  _dbContext.ClaimsForTransport.FirstOrDefault(p => p.GuidIn1S == claim.GuidIn1S);
+
+                        claimFound.Status = claim.Status;
+                        claimFound.Comments = claim.Comments;
+
                     }
                     await _dbContext.SaveChangesAsync();
                 }
@@ -84,7 +96,7 @@ namespace Logistic.Web.Controllers
                 throw;
             }
 
-            return 0;
+            return dataFiltered.Count();
         }
 
 
@@ -118,6 +130,9 @@ namespace Logistic.Web.Controllers
                 claim.CarrierId = claimdto.carrierId;
                 claim.Status = StatusOfClaim.Chosen;
                 _dbContext.SaveChanges();
+
+               
+
                 _logger.LogDebug($" Claim carrier chosen: {claim.GuidIn1S} {claim.NumberIn1S}");
             }
             catch (Exception e)
@@ -125,6 +140,29 @@ namespace Logistic.Web.Controllers
                 _logger.LogError(e.Message);
                 throw;
             }
+
+
+            // отправка уведомления через fcm
+            try
+            {
+                var userForClaim = _dbContext.Users.FirstOrDefault(p => p.CarrierId == claimdto.carrierId);
+
+                if (userForClaim != null)
+                {
+                    var userId = userForClaim.Id;
+
+                    var claimValue = _dbContext.UserClaims.FirstOrDefault(p => p.UserId == userId && p.ClaimType == "token")?.ClaimValue;
+
+                    if (claimValue != null) _fcmservice.SendNotification($"По заявке {claim.NumberIn1S} вы выбраны перевозчиком", claimValue);
+                    _logger.LogDebug($" fcm message sent to : {claimValue}");
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
+
             return Ok(claimdto.guidOfClaim);
 
         }

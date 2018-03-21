@@ -5,25 +5,19 @@
 
 
 @{
-    ViewData["Title"] = "Журнал заявок";
+    ViewData["Title"] = "Список заявок";
 }
 
-<h1>@ViewData["Title"] @Model.CarrierId</h1>
-
-<form asp-action="Index" method="get" novalidate="novalidate">
-
+<h1>@ViewData["Title"] </h1>
+<form asp-action="Index" method="get" novalidate="novalidate" id="filter-claims-form">
 
     <div class="form-inline b-filter-form">
 
         <div class="form-group">
             <div class="btn-group" role="group" data-toggle="buttons">
-
                 <label class="btn b-btn-bordered b-btn-rounded @( Model.FilterByStatus==FilterByStatus.All?"active":"" )"><input hidden type="radio" name="FilterByStatus" id="option1" autocomplete="off" value="0" @( Model.FilterByStatus == FilterByStatus.All ? "checked" : "" )> Все заявки</label>
-
                 <label class="btn b-btn-bordered b-btn-rounded @( Model.FilterByStatus==FilterByStatus.OnlyNew?"active":"" )"><input hidden type="radio" name="FilterByStatus" id="option2" autocomplete="off" value="1" @( Model.FilterByStatus == FilterByStatus.OnlyNew ? "checked" : "" )> на тендере</label>
-
                 <label class="btn b-btn-bordered b-btn-rounded @( Model.FilterByStatus==FilterByStatus.OnlyApproved?"active":"" )"><input hidden type="radio" name="FilterByStatus" id="option3" autocomplete="off" value="2" @( Model.FilterByStatus == FilterByStatus.OnlyApproved ? "checked" : "" )> одобренные</label>
-
             </div>
         </div>
 
@@ -44,11 +38,7 @@
             <input type="submit" value="Показать" class="btn active b-btn-bordered b-btn-rounded" />
         </div>
     </div>
-    <!-- </div>
-     </div>-->
-    
-
-
+   
     <div>
         @Html.Hidden("startDate")
         @Html.Hidden("endDate")
@@ -184,7 +174,7 @@
         {
 
            
-            @Html.Partial("CreateResponse", item.Reply)
+            @Html.Partial("CreateResponse", item.Reply,new ViewDataDictionary(this.ViewData) { { "Status", @item.Status.GetDisplayName() } } )
         }
     </div>
 

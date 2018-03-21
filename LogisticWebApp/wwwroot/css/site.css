@@ -142,6 +142,14 @@ h1 {
     min-width:200px;
 }
 
+
+.field-validation-error {
+    font-style:italic;
+}
+
+.h1-description {
+    margin-bottom:2em;
+}
     /*
     .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
         color: rgb(255, 255, 255);

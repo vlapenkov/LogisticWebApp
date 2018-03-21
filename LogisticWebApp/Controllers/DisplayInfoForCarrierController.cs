@@ -54,8 +54,13 @@ namespace Logistic.Web.Controllers
         // http://localhost:61564/api/DisplayInfoForCarrier/getlastactiveclaim
         public async Task<Guid> GetLastActiveClaim()
         {         
-            return (await _claimsService.GetLastActiveClaim());
+            var guid= (await _claimsService.GetLastActiveClaim());
+
+           // return Guid.NewGuid();
+            return guid;
         }
+
+
 
     }
 }

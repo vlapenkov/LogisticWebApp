@@ -25,15 +25,45 @@ function setNumberOfCars() {
     );
 }
 
+function showNotification() {
+    
+    if (!("Notification" in window)) {
+        console.log("This browser does not support desktop notification");
+    }
+
+    // Проверка разрешения на отправку уведомлений
+    else if (Notification.permission === "granted") {
+        // Если разрешено то создаем уведомлений
+      
+
+        (function spawnNotification(theBody, theIcon, theTitle) {
+            var options = {
+                body: theBody,
+                icon: theIcon,
+
+            }
+            var n = new Notification(theTitle, options);
+            n.onclick = function (event) {
+                event.preventDefault(); // prevent the browser from focusing the Notification's tab
+                window.location.href='/';
+            }
+
+        }) ("новые заявки в системе","/favicon.png","новые заявки");
+        
+    }
+
+}
+
 function checkAndSetLastActiveClaim() {
 
     setInterval(function () {
         $.getJSON('/api/DisplayInfoForCarrier/getlastactiveclaim').done(
             function (data) {
-
+            
                 if ((!!data) && localStorage.getItem("lastactiveclaim") !== data) {
+
                     localStorage.setItem("lastactiveclaim", data);
-                    alert("Новые заявки" + data);
+                    showNotification();
                 }
             }
         )

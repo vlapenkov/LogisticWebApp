@@ -1,28 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Logistic.Web.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Hosting;
-using LogisticWebApp.Data;
-using Microsoft.AspNetCore.Http;
-using System.IO;
-using Logistic.Data;
+﻿using Logistic.Web.Models;
 using Logistic.Web.Services;
-using ServiceReference1;
-using static ServiceReference1.ServiceCarrierPortTypeClient;
-using System.Net;
-using Microsoft.AspNetCore.Localization;
+using LogisticWebApp.Data;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
+
+
 
 namespace Logistic.Web.Controllers
 {
-   /// <summary>
-   /// Класс не тспользуется
-   /// </summary>
+
+    /// <summary>
+    /// Класс не тспользуется
+    /// </summary>
     public class HomeController : Controller
     {
 
@@ -45,26 +37,11 @@ namespace Logistic.Web.Controllers
             _carrierService = carrierService;
 
         }
-
-        public IActionResult GetCulture()
-        {
-
-           var culture= Request.HttpContext.Features.Get<IRequestCultureFeature>().RequestCulture;
-            
-            return View(culture);
-        }
-
-        public IActionResult Messaging()
-        {
-            return View();
-        }
+ 
 
 
         public async Task<IActionResult> Index()
         {
-           
-        
-
 
             ViewBag.CarrierId = _carrierService.Carrier?.Inn;
             if (User.Identity.IsAuthenticated)
@@ -79,6 +56,17 @@ namespace Logistic.Web.Controllers
             return View();
         }
 
+
+        /*
+        public IActionResult GetCulture()
+        {
+
+           var culture= Request.HttpContext.Features.Get<IRequestCultureFeature>().RequestCulture;
+            
+            return View(culture);
+        }
+
+  
         [Authorize(Roles ="Administrator")]
         [HttpGet]
         public async Task<IActionResult> AddFile()
@@ -135,5 +123,6 @@ namespace Logistic.Web.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        */
     }
 }

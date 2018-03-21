@@ -36,6 +36,10 @@ namespace Logistic.Web.Models
         [Display(Name = "КПП")]
         [MaxLength(9)]
         public string Kpp { get; set; }
+        
+
+        [MaxLength(50)]
+        public string Pwd { get; set; }
 
     }
 }

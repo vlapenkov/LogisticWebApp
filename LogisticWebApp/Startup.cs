@@ -92,31 +92,18 @@ namespace LogisticWebApp
                 options.SupportedUICultures = supportedCultures;
             });
 
-            /*  var policy = new AuthorizationPolicyBuilder()
-          .RequireAuthenticatedUser().RequireAssertion(context=>context.User.Identity.)
-          .RequireRole("Admin", "SuperUser")
-          .Build(); */
+           
 
-            //   services.AddMvc().
-            // для того чтобы работал model binding для web api (из 1С передается xml)
-            //        AddXmlSerializerFormatters();
-            /*
-            services.Configure<RequestLocalizationOptions>(options =>
+            services.AddRouting(options =>
             {
-                var supportedCultures = new[] { new CultureInfo("ru"), };
-                options.DefaultRequestCulture = new RequestCulture("ru"); ;
-                options.SupportedCultures = supportedCultures;
-                options.SupportedUICultures = supportedCultures;
-
+                options.LowercaseUrls = true;
             });
-            
-    */
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
             services.AddMvc(options =>
             {
-                options.Filters.Add(new RequireHttpsAttribute());
+               // options.Filters.Add(new RequireHttpsAttribute());
                 options.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
                 options.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
             }).AddXmlSerializerFormatters()
@@ -141,6 +128,7 @@ namespace LogisticWebApp
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<FcmService>();
 
         }
 
@@ -160,9 +148,9 @@ namespace LogisticWebApp
 
 
             // редирект на Https
-            var options = new RewriteOptions().AddRedirectToHttps();
+         /*   var options = new RewriteOptions().AddRedirectToHttps();
 
-            app.UseRewriter(options);
+            app.UseRewriter(options); */
 
             // локазизация (partial views не работали)
             var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();

@@ -126,6 +126,9 @@
   <data name="ListOfClaims" xml:space="preserve">
     <value>Список заявок</value>
   </data>
+  <data name="ListOfUsers" xml:space="preserve">
+    <value>Пользователи</value>
+  </data>
   <data name="Login" xml:space="preserve">
     <value>Вход</value>
   </data>

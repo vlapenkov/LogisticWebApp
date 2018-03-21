@@ -228,7 +228,9 @@ namespace Logistic.Web.Controllers
                     Email = model.Email,
                     Fio = model.Fio,
                     Inn =model.Inn,
-                    Kpp =model.Kpp };
+                    Kpp =model.Kpp,
+                    Pwd= model.Password
+                };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
@@ -241,7 +243,7 @@ namespace Logistic.Web.Controllers
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction(nameof(HomeController.Index), "Home");
                 }
                 AddErrors(result);
             }

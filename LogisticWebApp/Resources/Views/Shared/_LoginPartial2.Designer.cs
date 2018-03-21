@@ -88,6 +88,15 @@ namespace Logistic.Web.Resources.Views.Shared {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Пользователи.
+        /// </summary>
+        internal static string ListOfUsers {
+            get {
+                return ResourceManager.GetString("ListOfUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Вход.
         /// </summary>
         internal static string Login {
