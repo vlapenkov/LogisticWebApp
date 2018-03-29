@@ -30,7 +30,7 @@ namespace LogisticWebApp.Models.AccountViewModels
         [Required(ErrorMessage = "Введите ИНН")]
         [StringLength(12)]
         [Display(Name = "ИНН")]
-        [RegularExpression("([1-9][0-9]{11}$)", ErrorMessage ="ИНН должно быть 12 цифр")]
+        [RegularExpression("([1-9][0-9]{8}[0-9]{0,3}$)", ErrorMessage ="ИНН должно быть 9-12 цифр")]
         public string Inn { get; set; }
 
         /*   [Required] */

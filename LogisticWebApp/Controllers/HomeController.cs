@@ -1,11 +1,14 @@
 ﻿using Logistic.Web.Models;
 using Logistic.Web.Services;
 using LogisticWebApp.Data;
+using LogisticWebApp.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 
 
@@ -22,12 +25,14 @@ namespace Logistic.Web.Controllers
         ApplicationDbContext _dbContext;
         IHostingEnvironment _appEnvironment;
         CarrierService _carrierService;
+        IEmailSender _emailSender;
 
 
         public HomeController(UserManager<ApplicationUser> userManager, 
             ApplicationDbContext dbContext,
         IHostingEnvironment appEnvironment,
-        CarrierService carrierService    
+        CarrierService carrierService   ,
+        IEmailSender emailSender
         )
         
         {
@@ -35,6 +40,7 @@ namespace Logistic.Web.Controllers
             _dbContext = dbContext;
             _appEnvironment = appEnvironment;
             _carrierService = carrierService;
+            _emailSender = emailSender;
 
         }
  
@@ -42,7 +48,7 @@ namespace Logistic.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-
+            
             ViewBag.CarrierId = _carrierService.Carrier?.Inn;
             if (User.Identity.IsAuthenticated)
             {
@@ -56,8 +62,18 @@ namespace Logistic.Web.Controllers
             return View();
         }
 
-
         /*
+        public async Task<IActionResult> SendEmail()
+        {
+           string[] emails=  _dbContext.Users.Where(p => p.CarrierId != null).Select(u => u.Email).ToArray();
+            foreach(var email in emails)
+            await _emailSender.SendEmailAsync(email, "Новые заявки загружены", String.Format("новые заявки загружены {0} <a href=\"https://logistic.yst.ru\">в систему</a>", DateTime.Now));
+            
+        
+            return Content("email sent");
+        }
+
+        
         public IActionResult GetCulture()
         {
 

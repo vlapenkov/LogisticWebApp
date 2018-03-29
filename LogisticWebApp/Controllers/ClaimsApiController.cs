@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Logistic.Web.Models;
 using Microsoft.Extensions.Logging;
 using Logistic.Web.Services;
+using LogisticWebApp.Services;
 
 namespace Logistic.Web.Controllers
 {
@@ -31,14 +32,17 @@ namespace Logistic.Web.Controllers
         private readonly ApplicationDbContext _dbContext;
         private readonly ILogger<ClaimsApiController> _logger;
         private readonly FcmService  _fcmservice;
+        private readonly IEmailSender _emailSender;
 
-       
 
-        public ClaimsApiController(ApplicationDbContext dbContext, ILogger<ClaimsApiController> logger, FcmService fcmservice)
+
+
+        public ClaimsApiController(ApplicationDbContext dbContext, ILogger<ClaimsApiController> logger, FcmService fcmservice, IEmailSender emailSender)
         {
             _dbContext = dbContext;
             _logger = logger;
             _fcmservice = fcmservice;
+            _emailSender = emailSender;
         }
 
 
@@ -68,8 +72,8 @@ namespace Logistic.Web.Controllers
                         //_dbContext.Attach(claim);
                         //  _dbContext.Entry(claim).State = EntityState.Modified;
 
-                       var claimFound=  _dbContext.ClaimsForTransport.FirstOrDefault(p => p.GuidIn1S == claim.GuidIn1S);
-
+                       var claimFound= await _dbContext.ClaimsForTransport.FirstOrDefaultAsync(p => p.GuidIn1S == claim.GuidIn1S);
+                       
                         claimFound.Status = claim.Status;
                         claimFound.Comments = claim.Comments;
 
@@ -88,6 +92,11 @@ namespace Logistic.Web.Controllers
                 {
                     await _dbContext.ClaimsForTransport.AddRangeAsync(claimsNotExist);
                     await _dbContext.SaveChangesAsync();
+
+                    string[] emails = await _dbContext.Users.Where(p => p.CarrierId != null).Select(u => u.Email).ToArrayAsync();
+                    foreach (var email in emails)
+                        await _emailSender.SendEmailAsync(email, "Новые заявки загружены в систему логистики", String.Format("новые заявки загружены  {0}, перейдите по ссылке <a href=\"https://logistic.yst.ru\">в систему</a>", DateTime.Now));
+
                 }
             }
             catch (Exception e)
@@ -113,7 +122,7 @@ namespace Logistic.Web.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("choosecarrier")]
-        public IActionResult ChooseCarrier([FromBody]ClaimChosenDto claimdto)
+        public async Task<IActionResult> ChooseCarrier([FromBody]ClaimChosenDto claimdto)
         {
             
             var claim = _dbContext.ClaimsForTransport.FirstOrDefault(p => p.GuidIn1S == claimdto.guidOfClaim);
@@ -131,9 +140,24 @@ namespace Logistic.Web.Controllers
                 claim.Status = StatusOfClaim.Chosen;
                 _dbContext.SaveChanges();
 
-               
 
                 _logger.LogDebug($" Claim carrier chosen: {claim.GuidIn1S} {claim.NumberIn1S}");
+
+                // отправляем сообщение по почте
+                var emailChosen = _dbContext.Users.FirstOrDefault(p => p.CarrierId == claimdto.carrierId)?.Email;
+                if (!String.IsNullOrEmpty(emailChosen)) await _emailSender.SendEmailAsync(emailChosen, $"По заявке {claim.NumberIn1S} вы выбраны перевозчиком", String.Format("вы выбраны перевозчиком  {0}, перейдите по ссылке <a href=\"https://logistic.yst.ru\">в систему</a>", DateTime.Now));
+
+               var carrierIds= claim.Replies.Where(p => p.CarrierId != claimdto.carrierId).Select(c => c.CarrierId);
+
+                if (carrierIds.Any())
+                {
+                   var emails= await _dbContext.Users.Where(p => carrierIds.Contains( p.CarrierId )).Select(u => u.Email).ToArrayAsync();
+                    foreach (var email in emails)
+                        await _emailSender.SendEmailAsync(emailChosen, $"По заявке {claim.NumberIn1S} выбран другой перевозчик", String.Format("По заявке выбран другой перевозчик <a href=\"https://logistic.yst.ru\">в систему</a>", DateTime.Now));
+
+                }
+
+
             }
             catch (Exception e)
             {
@@ -141,6 +165,8 @@ namespace Logistic.Web.Controllers
                 throw;
             }
 
+
+            
 
             // отправка уведомления через fcm
             try

@@ -17,6 +17,7 @@ using Logistic.Web.Services;
 using Microsoft.Extensions.Logging;
 using ServiceReference1;
 using static ServiceReference1.ServiceCarrierPortTypeClient;
+using Microsoft.Extensions.Configuration;
 
 namespace Logistic.Web.Controllers
 {
@@ -32,21 +33,26 @@ namespace Logistic.Web.Controllers
         private readonly CarrierService _carrierService;
         private readonly ClaimService _claimService;
         private readonly ILogger<ClaimsController> _logger;
+        private readonly IConfiguration _configuration;
 
-        public ClaimsController(ApplicationDbContext context, CarrierService carrierService, ILogger<ClaimsController> logger, ClaimService claimService)
+        public ClaimsController(ApplicationDbContext context, CarrierService carrierService, ILogger<ClaimsController> logger, 
+            ClaimService claimService,
+            IConfiguration configuration
+            )
         {
             _context = context;
             _carrierService = carrierService;
             _logger = logger;
             _claimService = claimService;
+            _configuration = configuration;
         }
 
 
         //[ResponseCache(Duration = 100, VaryByQueryKeys = new[] { "page", "searchstring" })]
         public async Task<IActionResult> Index(int? page, string searchstring, FilterByStatus FilterByStatus, VolumeRanges? Volume, [ModelBinder(typeof(DateTimeModelBinder))] DateTime? startDate, [ModelBinder(typeof(DateTimeModelBinder))] DateTime? endDate)
         {
-          
-            int pageSize = 3;
+            
+            int pageSize = Int32.Parse(_configuration["DefaultPagesize"]);
             var carrierId = _carrierService.Carrier.Id;
             var model = new ClaimsViewModel
             {
@@ -62,27 +68,15 @@ namespace Logistic.Web.Controllers
 
            var claimsResult =await _claimService.GetFilteredClaimsAsync(model);
             model.Claims = claimsResult.ToPagedList(page ?? 1, pageSize);
-          
 
-        
+            ViewData["pagesize"] = pageSize;
+
+
             return View( model);
 
             
         }
-
-        private IActionResult ReturnModelErrorsAsJson()
-        {
-            var errorList = ModelState
-            .Where(x => x.Value.Errors.Count > 0)
-            .ToDictionary(
-                kvp => kvp.Key,
-                kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
-            );
-            return Json(
-           new
-           { Success = false, Element = errorList.First().Key, Text = errorList.First().Value[0] });
-        }
-
+      
         private void CheckModel(ModelStateDictionary modelState, ResponseViewModel model)
         {
             if (model.ArrivalDate >= model.UnloadDate)   modelState.AddModelError("UnloadDate", "дата разгрузки не может быть ранее даты подачи авто");
@@ -98,7 +92,7 @@ namespace Logistic.Web.Controllers
 
             CheckModel(ModelState , model);
 
-            if (!ModelState.IsValid) return ReturnModelErrorsAsJson();
+            if (!ModelState.IsValid) return this.ReturnModelErrorsAsJson();
 
             
                 try

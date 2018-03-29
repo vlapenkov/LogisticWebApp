@@ -25,6 +25,8 @@ namespace Logistic.Web.Controllers
         private readonly ILogger<CarsAndDriversController> _logger;
         private readonly FileUploadService _fileUploadService;
 
+        
+
         public CarsAndDriversController(CarrierService carrierService, 
             ApplicationDbContext dbContext,
             ILogger<CarsAndDriversController> logger, 
@@ -53,19 +55,6 @@ namespace Logistic.Web.Controllers
             return View(model);
         }
 
-        private IActionResult ReturnModelErrorsAsJson()
-        {
-            var errorList = ModelState
-            .Where(x => x.Value.Errors.Count > 0)
-            .ToDictionary(
-                kvp => kvp.Key,
-                kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
-            );
-            return Json(
-           new
-           { Success = false, Element = errorList.First().Key, Text = errorList.First().Value[0] });
-        }
-
         [HttpPost]
         public async Task<IActionResult> AddCar(CarVm model, IFormFile carfile)
         {
@@ -74,7 +63,7 @@ namespace Logistic.Web.Controllers
                 filePath = await _fileUploadService.AddFile(carfile);
 
 
-            if (!ModelState.IsValid) return ReturnModelErrorsAsJson();
+            if (!ModelState.IsValid) return this.ReturnModelErrorsAsJson();
 
 
             var car = new Car
@@ -103,7 +92,7 @@ namespace Logistic.Web.Controllers
             if (driverfile != null)
                 filePath = await _fileUploadService.AddFile(driverfile);
 
-            if (!ModelState.IsValid) return ReturnModelErrorsAsJson();
+            if (!ModelState.IsValid) return this.ReturnModelErrorsAsJson();
 
             var driver = new Driver
             {

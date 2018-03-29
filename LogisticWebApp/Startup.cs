@@ -119,8 +119,8 @@ namespace LogisticWebApp
                 options.AddPolicy("RequireCarrierId", policy => policy.Requirements.Add(new CarrierIdRequirement()));
             });
 
-            
 
+            services.AddSingleton<IConfiguration>(Configuration);
             services.AddScoped<IAuthorizationHandler, CarrierIdHandler>();
             services.AddScoped<CarrierService>();
             services.AddScoped<ClaimService>();

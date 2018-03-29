@@ -50,15 +50,12 @@ namespace Logistic.Web.Controllers
            var existingIds= _dbContext.Carriers.Select(cr => cr.Id);
             var dataFiltered = data.Where(p => !existingIds.Contains(p.Id));
 
-                
-
-         await   _dbContext.Carriers.AddRangeAsync(dataFiltered);
+            await   _dbContext.Carriers.AddRangeAsync(dataFiltered);
 
             await _dbContext.SaveChangesAsync();
 
-           // return data;
             return  await _dbContext.Carriers.ToListAsync();
-           // return values;
+           
         }
 
 

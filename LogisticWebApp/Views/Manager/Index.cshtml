@@ -22,7 +22,10 @@
     <div class="col-md-2 hidden-xs">
         Клиент
     </div>
+    <div class="col-md-2 hidden-xs">
+        Pwd
     </div>
+</div>
     @foreach (var user in Model)
     {
 <a href="@Url.Action("Edit","Manager", new {userId=user.Id })" class="row b-list-users">
@@ -44,6 +47,9 @@
 
     <div class="col-md-2 b-list-users-item">
         @user.Carrier?.FullName
+    </div>
+    <div class="col-md-2 b-list-users-item">
+        @user.Pwd
     </div>
 </a>
     }
