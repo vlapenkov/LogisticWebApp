@@ -22,7 +22,7 @@ using AutoMapper;
 
 namespace Logistic.Web.Controllers
 {
-   // [Authorize(Roles ="Manager")]
+    [Authorize(Roles ="Manager")]
 
     public class ManagerController : Controller
     {
