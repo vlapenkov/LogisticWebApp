@@ -23,5 +23,6 @@ namespace Logistic.Web.Models
         public StatusOfClaim Status { get; set; }
         public string CarrierId { set; get; }
         public ReplyToClaim Reply { get; set; }
+        public bool OtherRepliesExists { get; set; }
     }
 }

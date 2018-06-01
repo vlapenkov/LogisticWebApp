@@ -40,8 +40,9 @@ namespace Logistic.Data
         [MaxLength(Byte.MaxValue)]
         public string FullName { get; set; }
 
-        
-       
+        // активный перевозчик (виден при выборе)
+        public bool IsActive { get; set; }
+
 
     }
 }

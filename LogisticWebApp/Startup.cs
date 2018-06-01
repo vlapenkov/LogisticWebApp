@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
+using AutoMapper;
 
 namespace LogisticWebApp
 {
@@ -108,6 +109,8 @@ namespace LogisticWebApp
                 options.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
             }).AddXmlSerializerFormatters()
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
+
+            services.AddAutoMapper();
 
             /*    services.AddAuthorization(options =>
                 {

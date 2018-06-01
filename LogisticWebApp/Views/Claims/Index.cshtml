@@ -175,6 +175,11 @@
 
            
             @Html.Partial("CreateResponse", item.Reply,new ViewDataDictionary(this.ViewData) { { "Status", @item.Status.GetDisplayName() } } )
+
+            if (item.OtherRepliesExists)
+            { 
+                <div class="offer_item_info__otherreplies">по этой заявке есть ответы от других перевозчиков</div>
+            }
         }
     </div>
 

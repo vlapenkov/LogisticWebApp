@@ -56,7 +56,8 @@ namespace Logistic.Web.Services
                 Comments = p.Comments,
                 Status = p.Status,
                 CarrierId = p.CarrierId,
-                Reply = p.Replies.FirstOrDefault(x => x.CarrierId == model.CarrierId)
+                Reply = p.Replies.FirstOrDefault(x => x.CarrierId == model.CarrierId),
+                OtherRepliesExists=p.Replies.Any(reply=> reply.CarrierId!=model.CarrierId)
             });
 
             switch (model.FilterByStatus)

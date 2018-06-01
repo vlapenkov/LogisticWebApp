@@ -150,6 +150,15 @@ h1 {
 .h1-description {
     margin-bottom:2em;
 }
+
+.offer_item_info__otherreplies {
+    display: flex;
+    align-items: stretch;
+    padding: 5px 0;
+    border-top: 1px solid rgb(211, 211, 211);
+    background-color: rgb(234, 234, 234);
+    justify-content: space-around;
+}
     /*
     .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
         color: rgb(255, 255, 255);

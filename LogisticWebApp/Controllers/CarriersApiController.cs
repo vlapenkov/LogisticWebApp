@@ -47,12 +47,34 @@ namespace Logistic.Web.Controllers
         [HttpPost]
         public async Task< IList<Carrier>> Post([FromBody]List<Carrier> data)
         {
+
+            data.ForEach(record => record.IsActive = true);
+
+            // новые которых нет добавляем
            var existingIds= _dbContext.Carriers.Select(cr => cr.Id);
             var dataFiltered = data.Where(p => !existingIds.Contains(p.Id));
 
+            
             await   _dbContext.Carriers.AddRangeAsync(dataFiltered);
 
             await _dbContext.SaveChangesAsync();
+
+            // все остальные деактивируем
+           var actualIds= data.Select(p => p.Id);
+
+            var carriers=_dbContext.Carriers.Where(p => !actualIds.Contains(p.Id));
+
+            await carriers.ForEachAsync(record => record.IsActive = false);
+
+            await _dbContext.SaveChangesAsync();
+
+
+           var carriersActual = _dbContext.Carriers.Where(p => actualIds.Contains(p.Id));
+
+            await carriersActual.ForEachAsync(record => record.IsActive = true);
+
+            await _dbContext.SaveChangesAsync();
+
 
             return  await _dbContext.Carriers.ToListAsync();
            

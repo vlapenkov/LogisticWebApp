@@ -18,10 +18,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using Logistic.Web.Services;
+using AutoMapper;
 
 namespace Logistic.Web.Controllers
 {
-    [Authorize(Roles ="Manager")]
+   // [Authorize(Roles ="Manager")]
 
     public class ManagerController : Controller
     {
@@ -32,6 +33,7 @@ namespace Logistic.Web.Controllers
         private readonly UrlEncoder _urlEncoder;
         private readonly ApplicationDbContext _dbContext;
         private readonly CarrierService _carrierService;
+        private readonly IMapper _mapper;
 
 
 
@@ -42,7 +44,8 @@ namespace Logistic.Web.Controllers
           ILogger<ManageController> logger,
           UrlEncoder urlEncoder,
           ApplicationDbContext dbContext,
-          CarrierService carrierService
+          CarrierService carrierService,
+          IMapper mapper
           )
         {
             _userManager = userManager;
@@ -52,6 +55,7 @@ namespace Logistic.Web.Controllers
             _urlEncoder = urlEncoder;
             _dbContext = dbContext;
             _carrierService = carrierService;
+            _mapper = mapper;
         }
 
        
@@ -76,11 +80,11 @@ namespace Logistic.Web.Controllers
 
             var carrierId = user.CarrierId;
 
-            model = new ApplicationUserVm(userId, user.UserName, user.Fio, user.Inn, user.Kpp, user.CarrierId);
+            model = _mapper.Map<ApplicationUserVm>(user);
+          //  model = new ApplicationUserVm(userId, user.UserName, user.Fio, user.Inn, user.Kpp, user.CarrierId);
+                   
 
-         //  var user= _dbContext.Users.FirstOrDefault(u => u.Id == userId);
-
-            model.Carriers = await _dbContext.Carriers.OrderBy(c => c.FullName).ToListAsync();
+            model.Carriers = await _dbContext.Carriers.Where(p=>p.IsActive).OrderBy(c => c.FullName).ToListAsync();
 
             if (carrierId != null)
             {
